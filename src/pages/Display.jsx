@@ -268,7 +268,7 @@ function Display() {
                 )}
             </AnimatePresence>
 
-            <audio ref={audioRef} preload="auto" />
+            <audio ref={audioRef} preload="auto" crossOrigin="anonymous" />
 
             {/* Click to start overlay */}
             <AnimatePresence>

@@ -184,7 +184,7 @@ function SongManager() {
 
     return (
         <div className="bg-gray-800 rounded-xl overflow-hidden">
-            <audio ref={audioRef} onEnded={stopAudio} />
+            <audio ref={audioRef} onEnded={stopAudio} crossOrigin="anonymous" />
 
             {/* Header - Collapsible */}
             <button
