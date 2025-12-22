@@ -9,7 +9,7 @@ import AccessGate from './components/AccessGate';
 function App() {
   return (
     <GameProvider>
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <Routes>
           {/* Landing requires general access code */}
           <Route path="/" element={
