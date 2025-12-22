@@ -180,14 +180,28 @@ function Display() {
     }, [audioEnabled, audioRef]);
 
     const handleEnableAudio = () => {
+        console.log('Audio enabled by user click');
         setAudioEnabled(true);
         if (audioRef.current && currentSong) {
             const url = getActiveAudioUrl(currentSong, gameState.isRevealed);
+            console.log('Setting audio source:', url, 'Song:', currentSong);
             if (url) {
                 audioRef.current.src = url;
                 setCurrentAudioUrl(url);
                 prevSongIdRef.current = currentSong.id;
+
+                // Auto-play if game is already playing
+                if (gameState.isPlaying) {
+                    console.log('Game is already playing, starting audio');
+                    audioRef.current.play().catch(err => {
+                        console.error('Failed to start audio:', err);
+                    });
+                }
+            } else {
+                console.warn('No audio URL found for song:', currentSong);
             }
+        } else {
+            console.warn('No audio ref or currentSong:', { hasRef: !!audioRef.current, currentSong });
         }
     };
 
