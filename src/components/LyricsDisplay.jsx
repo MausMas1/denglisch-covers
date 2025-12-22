@@ -27,7 +27,7 @@ function LyricsDisplay({ lyricsFile, audioRef, isPlaying, isRevealed }) {
 
         const loadLyrics = async () => {
             try {
-                const response = await fetch(`/lyrics/${lyricsFile}`);
+                const response = await fetch(`${import.meta.env.BASE_URL}lyrics/${lyricsFile}`);
                 if (response.ok) {
                     const data = await response.json();
                     setLyrics(data.lyrics || []);
