@@ -1,0 +1,46 @@
+{
+    "songId": 1,
+    "language": "dutch",
+    "lyrics": [
+        {
+            "time": 0.0,
+            "text": "♪ ♫ ♪"
+        },
+        {
+            "time": 2.0,
+            "text": "Dit is de eerste test regel"
+        },
+        {
+            "time": 5.0,
+            "text": "Nu komt het tweede couplet"
+        },
+        {
+            "time": 8.0,
+            "text": "We testen de synchronisatie"
+        },
+        {
+            "time": 11.0,
+            "text": "Kijk hoe de woorden verschijnen"
+        },
+        {
+            "time": 14.0,
+            "text": "Elke regel heeft een tijdstip"
+        },
+        {
+            "time": 17.0,
+            "text": "Zo werkt karaoke perfect"
+        },
+        {
+            "time": 20.0,
+            "text": "Zing nu mee met de muziek"
+        },
+        {
+            "time": 23.0,
+            "text": "Zo hoort het te zijn"
+        },
+        {
+            "time": 26.0,
+            "text": "♪ ♫ ♪"
+        }
+    ]
+}

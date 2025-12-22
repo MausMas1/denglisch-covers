@@ -1,0 +1,46 @@
+{
+    "songId": 1,
+    "language": "english",
+    "lyrics": [
+        {
+            "time": 0.0,
+            "text": "♪ ♫ ♪"
+        },
+        {
+            "time": 2.0,
+            "text": "This is the first test line"
+        },
+        {
+            "time": 5.0,
+            "text": "Now comes the second verse"
+        },
+        {
+            "time": 8.0,
+            "text": "Testing lyrics synchronization"
+        },
+        {
+            "time": 11.0,
+            "text": "Watch the words appear in time"
+        },
+        {
+            "time": 14.0,
+            "text": "Every line has a timestamp"
+        },
+        {
+            "time": 17.0,
+            "text": "Making karaoke work just right"
+        },
+        {
+            "time": 20.0,
+            "text": "Sing along with the music now"
+        },
+        {
+            "time": 23.0,
+            "text": "This is how it's meant to be"
+        },
+        {
+            "time": 26.0,
+            "text": "♪ ♫ ♪"
+        }
+    ]
+}

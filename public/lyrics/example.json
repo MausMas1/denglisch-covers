@@ -1,0 +1,25 @@
+{
+    "songId": 1,
+    "lyrics": [
+        {
+            "time": 0.0,
+            "text": "Dit is een voorbeeld lyrics bestand"
+        },
+        {
+            "time": 3.5,
+            "text": "Elke regel heeft een timestamp"
+        },
+        {
+            "time": 7.0,
+            "text": "De tekst wordt gesynchroniseerd"
+        },
+        {
+            "time": 10.5,
+            "text": "Met het afspelende nummer"
+        },
+        {
+            "time": 14.0,
+            "text": "Zo kun je meezingen!"
+        }
+    ]
+}

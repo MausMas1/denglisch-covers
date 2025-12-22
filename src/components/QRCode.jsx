@@ -1,0 +1,38 @@
+import { QRCodeSVG } from 'qrcode.react';
+import { motion } from 'framer-motion';
+
+function QRCode({ size = 200 }) {
+    // Get the current host for the QR code URL
+    const playUrl = typeof window !== 'undefined'
+        ? `${window.location.origin}/play`
+        : '/play';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass rounded-2xl p-6 text-center"
+        >
+            <h3 className="text-white font-bold mb-4 flex items-center justify-center gap-2">
+                📱 Scan om mee te doen
+            </h3>
+
+            <div className="bg-white rounded-xl p-4 inline-block">
+                <QRCodeSVG
+                    value={playUrl}
+                    size={size}
+                    bgColor="#ffffff"
+                    fgColor="#1a1a2e"
+                    level="M"
+                    includeMargin={false}
+                />
+            </div>
+
+            <p className="text-snow/60 text-sm mt-4">
+                Of ga naar: <span className="text-christmas-gold font-mono">/play</span>
+            </p>
+        </motion.div>
+    );
+}
+
+export default QRCode;
