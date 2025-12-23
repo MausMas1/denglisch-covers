@@ -48,28 +48,35 @@ function SongManager() {
         const fetchFiles = async () => {
             setIsLoading(true);
             try {
-                const [audioRes, coverRes] = await Promise.all([
-                    fetch('http://localhost:3001/api/files/audio'),
-                    fetch('http://localhost:3001/api/files/covers')
-                ]);
+                // Only fetch local files if on localhost
+                if (window.location.hostname === 'localhost') {
+                    const [audioRes, coverRes] = await Promise.all([
+                        fetch('http://localhost:3001/api/files/audio'),
+                        fetch('http://localhost:3001/api/files/covers')
+                    ]);
 
-                if (audioRes.ok && coverRes.ok) {
-                    setAudioFiles(await audioRes.json());
-                    setCoverFiles(await coverRes.json());
-                    setApiError(false);
+                    if (audioRes.ok && coverRes.ok) {
+                        setAudioFiles(await audioRes.json());
+                        setCoverFiles(await coverRes.json());
+                        setApiError(false);
+                    } else {
+                        setApiError(true);
+                    }
                 } else {
-                    setApiError(true);
+                    setApiError(false); // No error, just not checking
                 }
 
                 // Try to fetch lyrics files
-                try {
-                    const lyricsRes = await fetch('http://localhost:3001/api/files/lyrics');
-                    if (lyricsRes.ok) {
-                        setLyricsFiles(await lyricsRes.json());
+                if (window.location.hostname === 'localhost') {
+                    try {
+                        const lyricsRes = await fetch('http://localhost:3001/api/files/lyrics');
+                        if (lyricsRes.ok) {
+                            setLyricsFiles(await lyricsRes.json());
+                        }
+                    } catch {
+                        // Lyrics API might not exist yet
+                        setLyricsFiles([]);
                     }
-                } catch {
-                    // Lyrics API might not exist yet
-                    setLyricsFiles([]);
                 }
             } catch (error) {
                 console.error('Failed to fetch files:', error);
@@ -85,24 +92,26 @@ function SongManager() {
     const refreshFiles = async () => {
         setIsLoading(true);
         try {
-            const [audioRes, coverRes] = await Promise.all([
-                fetch('http://localhost:3001/api/files/audio'),
-                fetch('http://localhost:3001/api/files/covers')
-            ]);
+            if (window.location.hostname === 'localhost') {
+                const [audioRes, coverRes] = await Promise.all([
+                    fetch('http://localhost:3001/api/files/audio'),
+                    fetch('http://localhost:3001/api/files/covers')
+                ]);
 
-            if (audioRes.ok && coverRes.ok) {
-                setAudioFiles(await audioRes.json());
-                setCoverFiles(await coverRes.json());
-                setApiError(false);
-            }
-
-            try {
-                const lyricsRes = await fetch('http://localhost:3001/api/files/lyrics');
-                if (lyricsRes.ok) {
-                    setLyricsFiles(await lyricsRes.json());
+                if (audioRes.ok && coverRes.ok) {
+                    setAudioFiles(await audioRes.json());
+                    setCoverFiles(await coverRes.json());
+                    setApiError(false);
                 }
-            } catch {
-                setLyricsFiles([]);
+
+                try {
+                    const lyricsRes = await fetch('http://localhost:3001/api/files/lyrics');
+                    if (lyricsRes.ok) {
+                        setLyricsFiles(await lyricsRes.json());
+                    }
+                } catch {
+                    setLyricsFiles([]);
+                }
             }
         } catch (error) {
             console.error('Failed to refresh files:', error);
