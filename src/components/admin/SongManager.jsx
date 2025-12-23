@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Music, Image, Trash2, Plus, FileText,
-    ChevronDown, ChevronUp, Play, Pause, RefreshCw, AlertCircle, Save, Cloud
+    ChevronDown, ChevronUp, Play, Pause, RefreshCw, AlertCircle, Save, Cloud, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { db } from '../../firebase';
 import { ref, set, onValue } from 'firebase/database';
@@ -162,6 +162,19 @@ function SongManager() {
         }
     };
 
+    // Move song up or down in the playlist
+    const moveSong = (index, direction) => {
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= songs.length) return;
+
+        const newSongs = [...songs];
+        [newSongs[index], newSongs[newIndex]] = [newSongs[newIndex], newSongs[index]];
+
+        // Update IDs to match new order (1-indexed)
+        const reorderedSongs = newSongs.map((song, i) => ({ ...song, id: i + 1 }));
+        saveSongsToFirebase(reorderedSongs);
+    };
+
     // Play audio preview
     const togglePlay = (song, type) => {
         const filename = type === 'dutch' ? song.audioFileDutch : song.audioFileEnglish;
@@ -257,7 +270,7 @@ function SongManager() {
 
                             {/* Songs List */}
                             <div className="space-y-2 max-h-96 overflow-y-auto">
-                                {songs.map((song) => (
+                                {songs.map((song, index) => (
                                     <motion.div
                                         key={song.id}
                                         layout
@@ -268,7 +281,24 @@ function SongManager() {
                                             className="flex items-center justify-between p-3 cursor-pointer hover:bg-gray-800"
                                             onClick={() => setExpandedId(expandedId === song.id ? null : song.id)}
                                         >
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-2">
+                                                {/* Up/Down buttons */}
+                                                <div className="flex flex-col gap-0.5" onClick={(e) => e.stopPropagation()}>
+                                                    <button
+                                                        onClick={() => moveSong(index, -1)}
+                                                        disabled={index === 0}
+                                                        className="p-0.5 rounded hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    >
+                                                        <ArrowUp size={12} className="text-gray-400" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => moveSong(index, 1)}
+                                                        disabled={index === songs.length - 1}
+                                                        className="p-0.5 rounded hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    >
+                                                        <ArrowDown size={12} className="text-gray-400" />
+                                                    </button>
+                                                </div>
                                                 <span className="text-christmas-gold font-bold text-sm w-6">
                                                     #{song.id}
                                                 </span>
@@ -422,7 +452,32 @@ function SongManager() {
                                                             </div>
                                                         </div>
 
-                                                        {/* Cover Image */}
+                                                        {/* Start Time Offsets */}
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <div>
+                                                                <label className="text-xs text-gray-500">⏱️ Start sec (EN)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    min="0"
+                                                                    value={song.startTimeEnglish || 0}
+                                                                    onChange={(e) => updateSong(song.id, { startTimeEnglish: parseInt(e.target.value) || 0 })}
+                                                                    className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-white text-sm"
+                                                                    placeholder="0"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-xs text-gray-500">⏱️ Start sec (NL)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    min="0"
+                                                                    value={song.startTimeDutch || 0}
+                                                                    onChange={(e) => updateSong(song.id, { startTimeDutch: parseInt(e.target.value) || 0 })}
+                                                                    className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-white text-sm"
+                                                                    placeholder="0"
+                                                                />
+                                                            </div>
+                                                        </div>
+
                                                         <div>
                                                             <label className="text-xs text-gray-500 flex items-center gap-1">
                                                                 <Image size={12} /> Cover Image

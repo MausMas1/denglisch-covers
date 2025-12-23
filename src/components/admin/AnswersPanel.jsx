@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Clock, Check, X, ChevronDown, ChevronUp, Music } from 'lucide-react';
+import { MessageSquare, Clock, Check, X, ChevronDown, ChevronUp, Music, Zap } from 'lucide-react';
 import { db } from '../../firebase';
 import { ref, onValue } from 'firebase/database';
 import { useGame } from '../../context/GameContext';
+import { fuzzyMatch } from '../../utils/fuzzyMatch';
 
 function AnswersPanel({ songId, songTitle }) {
     const { gradeAnswer, songs } = useGame();
@@ -41,6 +42,49 @@ function AnswersPanel({ songId, songTitle }) {
     const handleGrade = async (answerId, teamName, field, isCorrect) => {
         await gradeAnswer(answerId, teamName, field, isCorrect);
     };
+
+    // Auto-grade answers using fuzzy matching
+    const autoGradeAnswer = (song, answer) => {
+        if (!song || !answer) return { title: null, artist: null };
+
+        const titleMatch = fuzzyMatch(answer.title, song.titleOriginal, 3);
+        const artistMatch = fuzzyMatch(answer.artist, song.artistOriginal, 3);
+
+        return {
+            title: titleMatch.autoApproved ? true : null,
+            titleDistance: titleMatch.distance,
+            artist: artistMatch.autoApproved ? true : null,
+            artistDistance: artistMatch.distance
+        };
+    };
+
+    // Auto-grade pending answers when they arrive
+    const processedAnswersRef = useRef(new Set());
+
+    useEffect(() => {
+        Object.entries(allAnswers).forEach(([songIdStr, songAnswers]) => {
+            const song = songs.find(s => s.id === parseInt(songIdStr));
+            if (!song) return;
+
+            Object.entries(songAnswers || {}).forEach(([teamName, answer]) => {
+                const answerKey = `${songIdStr}-${teamName}`;
+                const hasUngraded = answer.titleCorrect === undefined || answer.artistCorrect === undefined;
+
+                if (hasUngraded && !processedAnswersRef.current.has(answerKey)) {
+                    const autoGrade = autoGradeAnswer(song, answer);
+
+                    if (autoGrade.title === true && answer.titleCorrect === undefined) {
+                        gradeAnswer(songIdStr, teamName, 'title', true);
+                    }
+                    if (autoGrade.artist === true && answer.artistCorrect === undefined) {
+                        gradeAnswer(songIdStr, teamName, 'artist', true);
+                    }
+
+                    processedAnswersRef.current.add(answerKey);
+                }
+            });
+        });
+    }, [allAnswers, songs, gradeAnswer]);
 
     const sortedSongIds = Object.keys(allAnswers).sort((a, b) => {
         // Current song first, then by ID descending
@@ -125,8 +169,8 @@ function AnswersPanel({ songId, songTitle }) {
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'title', true)}
                                                                         className={`p-1 rounded ${answer.titleCorrect === true
-                                                                                ? 'bg-christmas-green text-white'
-                                                                                : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'
+                                                                            ? 'bg-christmas-green text-white'
+                                                                            : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'
                                                                             }`}
                                                                     >
                                                                         <Check size={14} />
@@ -134,8 +178,8 @@ function AnswersPanel({ songId, songTitle }) {
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'title', false)}
                                                                         className={`p-1 rounded ${answer.titleCorrect === false
-                                                                                ? 'bg-red-600 text-white'
-                                                                                : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'
+                                                                            ? 'bg-red-600 text-white'
+                                                                            : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'
                                                                             }`}
                                                                     >
                                                                         <X size={14} />
@@ -153,8 +197,8 @@ function AnswersPanel({ songId, songTitle }) {
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'artist', true)}
                                                                         className={`p-1 rounded ${answer.artistCorrect === true
-                                                                                ? 'bg-christmas-green text-white'
-                                                                                : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'
+                                                                            ? 'bg-christmas-green text-white'
+                                                                            : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'
                                                                             }`}
                                                                     >
                                                                         <Check size={14} />
@@ -162,8 +206,8 @@ function AnswersPanel({ songId, songTitle }) {
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'artist', false)}
                                                                         className={`p-1 rounded ${answer.artistCorrect === false
-                                                                                ? 'bg-red-600 text-white'
-                                                                                : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'
+                                                                            ? 'bg-red-600 text-white'
+                                                                            : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'
                                                                             }`}
                                                                     >
                                                                         <X size={14} />

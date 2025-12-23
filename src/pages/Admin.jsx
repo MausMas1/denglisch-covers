@@ -19,6 +19,7 @@ import TimerSettings from '../components/admin/TimerSettings';
 import AccessCodeSettings from '../components/admin/AccessCodeSettings';
 import QRCodeToggle from '../components/admin/QRCodeToggle';
 import SpeedBonusSettings from '../components/admin/SpeedBonusSettings';
+import LeaderControls from '../components/admin/LeaderControls';
 
 function Admin() {
     const { isConnected, currentSong } = useGame();
@@ -57,6 +58,11 @@ function Admin() {
 
             {/* Main Content */}
             <main className="px-4 py-6 space-y-6 pb-20">
+                {/* Leader Song / Opening */}
+                <section>
+                    <LeaderControls />
+                </section>
+
                 {/* Current Song */}
                 <section>
                     <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">

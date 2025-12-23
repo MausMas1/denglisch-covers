@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, Music, Trophy } from 'lucide-react';
+import { Volume2, Music, Trophy, Maximize, Minimize } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { db } from '../firebase';
 import { ref, set, onValue } from 'firebase/database';
@@ -15,6 +15,7 @@ import TypingIndicators from '../components/TypingIndicators';
 import CountdownTimer from '../components/CountdownTimer';
 import StatisticsOverlay from '../components/StatisticsOverlay';
 import DisplayQRCode from '../components/DisplayQRCode';
+import LeaderOpening from '../components/LeaderOpening';
 
 function Display() {
     const { gameState, currentSong, audioRef, getActiveAudioUrl } = useGame();
@@ -28,6 +29,7 @@ function Display() {
     const [remoteAudioRequest, setRemoteAudioRequest] = useState(false);
     const prevSongIdRef = useRef(null);
     const progressBroadcastRef = useRef(null);
+    const leaderAudioRef = useRef(null);
 
     // Listen for remote audio activation from admin
     useEffect(() => {
@@ -43,6 +45,37 @@ function Display() {
         });
         return () => unsubscribe();
     }, [audioEnabled]);
+
+    // Handle leader song playback
+    useEffect(() => {
+        if (!audioEnabled) return;
+
+        if (gameState.leaderPlaying && gameState.leaderUrl) {
+            // Stop regular audio if playing
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+
+            // Create and play leader audio
+            if (!leaderAudioRef.current) {
+                leaderAudioRef.current = new Audio();
+            }
+            leaderAudioRef.current.src = gameState.leaderUrl;
+            leaderAudioRef.current.play().catch(console.error);
+        } else {
+            // Stop leader audio
+            if (leaderAudioRef.current) {
+                leaderAudioRef.current.pause();
+                leaderAudioRef.current.src = '';
+            }
+        }
+
+        return () => {
+            if (leaderAudioRef.current) {
+                leaderAudioRef.current.pause();
+            }
+        };
+    }, [gameState.leaderPlaying, gameState.leaderUrl, audioEnabled]);
 
     // Handle song transitions
     useEffect(() => {
@@ -70,6 +103,13 @@ function Display() {
         if (newUrl && (songChanged || urlChanged)) {
             const wasPlaying = !audioRef.current.paused;
             audioRef.current.src = newUrl;
+
+            // Apply start time offset based on which audio is playing
+            const startTime = gameState.isRevealed
+                ? (currentSong.startTimeDutch || 0)
+                : (currentSong.startTimeEnglish || 0);
+            audioRef.current.currentTime = startTime;
+
             setCurrentAudioUrl(newUrl);
             prevSongIdRef.current = currentSong.id;
 
@@ -221,10 +261,32 @@ function Display() {
             <Confetti isActive={showConfetti} />
             <FlyingEmojis />
 
+            {/* Leader Opening Animation */}
+            <AnimatePresence>
+                {gameState.leaderPlaying && <LeaderOpening />}
+            </AnimatePresence>
+
             {!gameState.isRevealed && <TypingIndicators songId={currentSong?.id} />}
             {!gameState.isRevealed && <CountdownTimer />}
             <StatisticsOverlay />
             <DisplayQRCode />
+
+            {/* Fullscreen Toggle Button */}
+            <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else {
+                        document.documentElement.requestFullscreen();
+                    }
+                }}
+                className="fixed bottom-6 right-6 z-50 p-3 glass rounded-full border border-christmas-gold/30 text-white/70 hover:text-white transition-colors"
+                title="Fullscreen"
+            >
+                {document.fullscreenElement ? <Minimize size={24} /> : <Maximize size={24} />}
+            </motion.button>
 
             {/* Karaoke Lyrics Display - centered, adjusts for reveal */}
             {gameState.showLyrics && (

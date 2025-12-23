@@ -30,8 +30,8 @@ function SpeedBonusSettings() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleToggle}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${speedEnabled
-                            ? 'bg-christmas-green text-white'
-                            : 'bg-gray-700 text-gray-400'
+                        ? 'bg-christmas-green text-white'
+                        : 'bg-gray-700 text-gray-400'
                         }`}
                 >
                     {speedEnabled ? 'Aan' : 'Uit'}
@@ -51,10 +51,12 @@ function SpeedBonusSettings() {
                             <span className="text-snow/80 text-sm">Goud (1e)</span>
                         </div>
                         <input
-                            type="number"
-                            min="0"
-                            value={goldBonus}
+                            type="text"
+                            inputMode="numeric"
+                            value={goldBonus === 0 ? '' : goldBonus}
                             onChange={(e) => handleChange('speedBonusGold', e.target.value)}
+                            onBlur={(e) => !e.target.value && handleChange('speedBonusGold', '0')}
+                            placeholder="0"
                             className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-white text-center"
                         />
                     </div>
@@ -66,10 +68,12 @@ function SpeedBonusSettings() {
                             <span className="text-snow/80 text-sm">Zilver (2e)</span>
                         </div>
                         <input
-                            type="number"
-                            min="0"
-                            value={silverBonus}
+                            type="text"
+                            inputMode="numeric"
+                            value={silverBonus === 0 ? '' : silverBonus}
                             onChange={(e) => handleChange('speedBonusSilver', e.target.value)}
+                            onBlur={(e) => !e.target.value && handleChange('speedBonusSilver', '0')}
+                            placeholder="0"
                             className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-white text-center"
                         />
                     </div>
@@ -81,10 +85,12 @@ function SpeedBonusSettings() {
                             <span className="text-snow/80 text-sm">Brons (3e)</span>
                         </div>
                         <input
-                            type="number"
-                            min="0"
-                            value={bronzeBonus}
+                            type="text"
+                            inputMode="numeric"
+                            value={bronzeBonus === 0 ? '' : bronzeBonus}
                             onChange={(e) => handleChange('speedBonusBronze', e.target.value)}
+                            onBlur={(e) => !e.target.value && handleChange('speedBonusBronze', '0')}
+                            placeholder="0"
                             className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-white text-center"
                         />
                     </div>
