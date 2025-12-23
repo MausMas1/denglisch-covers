@@ -131,23 +131,29 @@ function AnswerHistory() {
                                                                         <span className="text-xs">{answer.songTitle}</span>
                                                                     </div>
                                                                     <div className="grid grid-cols-2 gap-2">
-                                                                        <div className="flex items-center gap-1">
-                                                                            {answer.titleCorrect === true && <Check size={12} className="text-green-400" />}
-                                                                            {answer.titleCorrect === false && <X size={12} className="text-red-400" />}
-                                                                            <span className={`truncate ${answer.titleCorrect === true ? 'text-green-400' :
+                                                                        <div>
+                                                                            <span className="text-gray-500 text-xs">Titel</span>
+                                                                            <div className="flex items-center gap-1">
+                                                                                {answer.titleCorrect === true && <Check size={12} className="text-green-400" />}
+                                                                                {answer.titleCorrect === false && <X size={12} className="text-red-400" />}
+                                                                                <span className={`truncate ${answer.titleCorrect === true ? 'text-green-400' :
                                                                                     answer.titleCorrect === false ? 'text-red-400' : 'text-gray-300'
-                                                                                }`}>
-                                                                                {answer.title}
-                                                                            </span>
+                                                                                    }`}>
+                                                                                    {answer.title}
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div className="flex items-center gap-1">
-                                                                            {answer.artistCorrect === true && <Check size={12} className="text-green-400" />}
-                                                                            {answer.artistCorrect === false && <X size={12} className="text-red-400" />}
-                                                                            <span className={`truncate ${answer.artistCorrect === true ? 'text-green-400' :
+                                                                        <div>
+                                                                            <span className="text-gray-500 text-xs">Artiest</span>
+                                                                            <div className="flex items-center gap-1">
+                                                                                {answer.artistCorrect === true && <Check size={12} className="text-green-400" />}
+                                                                                {answer.artistCorrect === false && <X size={12} className="text-red-400" />}
+                                                                                <span className={`truncate ${answer.artistCorrect === true ? 'text-green-400' :
                                                                                     answer.artistCorrect === false ? 'text-red-400' : 'text-gray-300'
-                                                                                }`}>
-                                                                                {answer.artist}
-                                                                            </span>
+                                                                                    }`}>
+                                                                                    {answer.artist}
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
