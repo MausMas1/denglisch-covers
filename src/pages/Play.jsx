@@ -41,6 +41,21 @@ function Play() {
     // Get existing teams from gameState
     const existingTeams = gameState.teams || [];
 
+    // Validate saved team name against Firebase - reset if team no longer exists
+    useEffect(() => {
+        const savedTeamName = localStorage.getItem('xmas-team-name');
+        if (savedTeamName && existingTeams.length > 0) {
+            const teamExists = existingTeams.some(t => t.name === savedTeamName);
+            if (!teamExists) {
+                // Team was deleted from Firebase, reset registration
+                console.log('Team no longer exists in game, resetting registration');
+                localStorage.removeItem('xmas-team-name');
+                setTeamName('');
+                setTeamRegistered(false);
+            }
+        }
+    }, [existingTeams]);
+
     // Calculate song progress
     const currentIndex = songs.findIndex(s => s.id === currentSong?.id) + 1;
     const totalSongs = songs.length;
@@ -310,20 +325,20 @@ function Play() {
                             <p className="text-snow/60 text-sm mb-2">Jouw antwoord:</p>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className={`px-2 py-1 rounded font-medium ${myAnswer.titleCorrect === true
-                                        ? 'bg-green-500/20 text-green-400'
-                                        : myAnswer.titleCorrect === false
-                                            ? 'bg-red-500/20 text-red-400'
-                                            : 'bg-gray-500/20 text-gray-300'
+                                    ? 'bg-green-500/20 text-green-400'
+                                    : myAnswer.titleCorrect === false
+                                        ? 'bg-red-500/20 text-red-400'
+                                        : 'bg-gray-500/20 text-gray-300'
                                     }`}>
                                     {myAnswer.titleCorrect === true ? '✓' : myAnswer.titleCorrect === false ? '✗' : '•'} {myAnswer.title}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className={`px-2 py-1 rounded font-medium ${myAnswer.artistCorrect === true
-                                        ? 'bg-green-500/20 text-green-400'
-                                        : myAnswer.artistCorrect === false
-                                            ? 'bg-red-500/20 text-red-400'
-                                            : 'bg-gray-500/20 text-gray-300'
+                                    ? 'bg-green-500/20 text-green-400'
+                                    : myAnswer.artistCorrect === false
+                                        ? 'bg-red-500/20 text-red-400'
+                                        : 'bg-gray-500/20 text-gray-300'
                                     }`}>
                                     {myAnswer.artistCorrect === true ? '✓' : myAnswer.artistCorrect === false ? '✗' : '•'} {myAnswer.artist}
                                 </span>
