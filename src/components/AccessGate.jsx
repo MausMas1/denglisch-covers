@@ -6,7 +6,7 @@ import { ref, onValue } from 'firebase/database';
 
 const DEFAULT_ACCESS_CODE = '5555';
 const DEFAULT_ADMIN_PIN = '1230';
-const AUTH_VERSION = 'v2'; // Change this to invalidate all sessions
+const AUTH_VERSION = 'v3'; // Change this to invalidate all sessions
 
 function AccessGate({ children, requireAdmin = false }) {
     const [accessCode, setAccessCode] = useState('');
