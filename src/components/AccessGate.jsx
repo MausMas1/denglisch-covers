@@ -9,42 +9,25 @@ const DEFAULT_ADMIN_PIN = '1230';
 const AUTH_VERSION = 'v3'; // Change this to invalidate all sessions
 
 function AccessGate({ children, requireAdmin = false }) {
+    const PLAYER_KEY = `xmas-access-${AUTH_VERSION}`;
+    const ADMIN_KEY = `xmas-admin-${AUTH_VERSION}`;
+
+    // Check localStorage synchronously to determine initial unlock state
+    const getInitialUnlockState = () => {
+        if (requireAdmin) {
+            return localStorage.getItem(ADMIN_KEY) === 'true';
+        } else {
+            return localStorage.getItem(PLAYER_KEY) === 'true' || localStorage.getItem(ADMIN_KEY) === 'true';
+        }
+    };
+
     const [accessCode, setAccessCode] = useState('');
-    const [isUnlocked, setIsUnlocked] = useState(false);
+    const [isUnlocked, setIsUnlocked] = useState(getInitialUnlockState);
     const [error, setError] = useState('');
     const [correctCodes, setCorrectCodes] = useState({
         accessCode: DEFAULT_ACCESS_CODE,
         adminPin: DEFAULT_ADMIN_PIN
     });
-
-    const PLAYER_KEY = `xmas-access-${AUTH_VERSION}`;
-    const ADMIN_KEY = `xmas-admin-${AUTH_VERSION}`;
-
-    // Check if already unlocked in localStorage
-    useEffect(() => {
-        console.log('AccessGate mount - requireAdmin:', requireAdmin);
-        console.log('PLAYER_KEY:', PLAYER_KEY, 'value:', localStorage.getItem(PLAYER_KEY));
-        console.log('ADMIN_KEY:', ADMIN_KEY, 'value:', localStorage.getItem(ADMIN_KEY));
-
-        if (requireAdmin) {
-            // Admin ONLY checks admin key - player key is irrelevant
-            const savedAdmin = localStorage.getItem(ADMIN_KEY);
-            console.log('Admin check - savedAdmin:', savedAdmin);
-            if (savedAdmin === 'true') {
-                console.log('UNLOCKING - admin key found');
-                setIsUnlocked(true);
-            } else {
-                console.log('NOT UNLOCKED - no admin key');
-            }
-        } else {
-            // Player can access if they have player key OR admin key
-            const savedAccess = localStorage.getItem(PLAYER_KEY);
-            const savedAdmin = localStorage.getItem(ADMIN_KEY);
-            if (savedAccess === 'true' || savedAdmin === 'true') {
-                setIsUnlocked(true);
-            }
-        }
-    }, [requireAdmin, PLAYER_KEY, ADMIN_KEY]);
 
     // Listen to codes from Firebase
     useEffect(() => {
