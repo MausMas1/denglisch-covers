@@ -212,8 +212,8 @@ function SongManager() {
                         className="overflow-hidden"
                     >
                         <div className="p-4 pt-0 space-y-4">
-                            {/* API Error Warning */}
-                            {apiError && (
+                            {/* API Error Warning - Only show on localhost */}
+                            {apiError && window.location.hostname === 'localhost' && (
                                 <div className="flex items-center gap-2 p-3 bg-red-900/50 rounded-lg text-red-300 text-sm">
                                     <AlertCircle size={16} />
                                     <span>File API niet bereikbaar. Start: npm run file-api</span>
