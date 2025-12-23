@@ -21,6 +21,7 @@ import QRCodeToggle from '../components/admin/QRCodeToggle';
 import SpeedBonusSettings from '../components/admin/SpeedBonusSettings';
 import LeaderControls from '../components/admin/LeaderControls';
 import FinalControls from '../components/admin/FinalControls';
+import AnswerHistory from '../components/admin/AnswerHistory';
 
 function Admin() {
     const { isConnected, currentSong } = useGame();
@@ -117,6 +118,11 @@ function Admin() {
                 {/* Score Manager */}
                 <section className="bg-gray-800/50 rounded-2xl p-4">
                     <ScoreManager />
+                </section>
+
+                {/* Answer History */}
+                <section>
+                    <AnswerHistory />
                 </section>
 
                 {/* Song Selector */}
