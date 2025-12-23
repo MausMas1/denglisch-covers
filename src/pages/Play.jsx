@@ -306,15 +306,25 @@ function Play() {
 
                     {/* My answer with grading */}
                     {myAnswer && (
-                        <div className="text-left bg-white/5 rounded-xl p-4 mb-4">
+                        <div className="text-left bg-black/40 backdrop-blur-sm rounded-xl p-4 mb-4 border border-white/10">
                             <p className="text-snow/60 text-sm mb-2">Jouw antwoord:</p>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className={myAnswer.titleCorrect === true ? 'text-christmas-green' : myAnswer.titleCorrect === false ? 'text-red-400' : 'text-christmas-gold'}>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className={`px-2 py-1 rounded font-medium ${myAnswer.titleCorrect === true
+                                        ? 'bg-green-500/20 text-green-400'
+                                        : myAnswer.titleCorrect === false
+                                            ? 'bg-red-500/20 text-red-400'
+                                            : 'bg-gray-500/20 text-gray-300'
+                                    }`}>
                                     {myAnswer.titleCorrect === true ? '✓' : myAnswer.titleCorrect === false ? '✗' : '•'} {myAnswer.title}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className={myAnswer.artistCorrect === true ? 'text-christmas-green' : myAnswer.artistCorrect === false ? 'text-red-400' : 'text-gray-400'}>
+                                <span className={`px-2 py-1 rounded font-medium ${myAnswer.artistCorrect === true
+                                        ? 'bg-green-500/20 text-green-400'
+                                        : myAnswer.artistCorrect === false
+                                            ? 'bg-red-500/20 text-red-400'
+                                            : 'bg-gray-500/20 text-gray-300'
+                                    }`}>
                                     {myAnswer.artistCorrect === true ? '✓' : myAnswer.artistCorrect === false ? '✗' : '•'} {myAnswer.artist}
                                 </span>
                             </div>

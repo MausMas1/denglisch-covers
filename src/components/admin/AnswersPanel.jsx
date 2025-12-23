@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Clock, Check, X, ChevronDown, ChevronUp, Music, CheckCircle } from 'lucide-react';
+import { MessageSquare, Clock, Check, X, ChevronDown, ChevronUp, Music, CheckCircle, Zap } from 'lucide-react';
 import { db } from '../../firebase';
 import { ref, onValue } from 'firebase/database';
 import { useGame } from '../../context/GameContext';
@@ -30,6 +30,16 @@ function AnswersPanel({ songId, songTitle }) {
         if (!timestamp) return '';
         const date = new Date(timestamp);
         return date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    };
+
+    // Format time ago
+    const timeAgo = (timestamp) => {
+        if (!timestamp) return '';
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+        if (seconds < 60) return `${seconds}s`;
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes}m`;
+        return formatTime(timestamp);
     };
 
     const getSong = (id) => songs.find(s => s.id === parseInt(id));
@@ -225,13 +235,25 @@ function AnswersPanel({ songId, songTitle }) {
                                                 {/* Answers list */}
                                                 {sortedAnswers.map(([teamName, answer]) => {
                                                     const status = getAnswerStatus(answer);
+                                                    const song = getSong(answerId);
+                                                    const wasAutoGraded = song && (
+                                                        (answer.titleCorrect === true && fuzzyMatch(answer.title, song.titleOriginal, 3).autoApproved) ||
+                                                        (answer.artistCorrect === true && fuzzyMatch(answer.artist, song.artistOriginal, 3).autoApproved)
+                                                    );
                                                     return (
                                                         <div key={teamName} className={`rounded-lg p-3 ${statusColors[status]}`}>
                                                             <div className="flex items-start justify-between gap-2 mb-2">
-                                                                <span className="text-white font-medium">{teamName}</span>
-                                                                <span className="text-gray-500 text-xs flex items-center gap-1">
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-white font-medium">{teamName}</span>
+                                                                    {wasAutoGraded && (
+                                                                        <span title="Auto-goedgekeurd" className="text-yellow-400">
+                                                                            <Zap size={12} />
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <span className="text-gray-500 text-xs flex items-center gap-1" title={formatTime(answer.submittedAt)}>
                                                                     <Clock size={10} />
-                                                                    {formatTime(answer.submittedAt)}
+                                                                    {timeAgo(answer.submittedAt)}
                                                                 </span>
                                                             </div>
 
