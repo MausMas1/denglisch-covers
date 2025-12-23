@@ -266,15 +266,15 @@ function AnswersPanel({ songId, songTitle }) {
                                                                 <div className="flex gap-1">
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'title', true)}
-                                                                        className={`p-1 rounded ${answer.titleCorrect === true ? 'bg-christmas-green text-white' : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'}`}
+                                                                        className={`p-2 rounded ${answer.titleCorrect === true ? 'bg-christmas-green text-white' : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'}`}
                                                                     >
-                                                                        <Check size={14} />
+                                                                        <Check size={18} />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'title', false)}
-                                                                        className={`p-1 rounded ${answer.titleCorrect === false ? 'bg-red-600 text-white' : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'}`}
+                                                                        className={`p-2 rounded ${answer.titleCorrect === false ? 'bg-red-600 text-white' : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'}`}
                                                                     >
-                                                                        <X size={14} />
+                                                                        <X size={18} />
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -288,15 +288,15 @@ function AnswersPanel({ songId, songTitle }) {
                                                                 <div className="flex gap-1">
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'artist', true)}
-                                                                        className={`p-1 rounded ${answer.artistCorrect === true ? 'bg-christmas-green text-white' : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'}`}
+                                                                        className={`p-2 rounded ${answer.artistCorrect === true ? 'bg-christmas-green text-white' : 'bg-gray-600 text-gray-400 hover:bg-green-600 hover:text-white'}`}
                                                                     >
-                                                                        <Check size={14} />
+                                                                        <Check size={18} />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => handleGrade(answerId, teamName, 'artist', false)}
-                                                                        className={`p-1 rounded ${answer.artistCorrect === false ? 'bg-red-600 text-white' : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'}`}
+                                                                        className={`p-2 rounded ${answer.artistCorrect === false ? 'bg-red-600 text-white' : 'bg-gray-600 text-gray-400 hover:bg-red-600 hover:text-white'}`}
                                                                     >
-                                                                        <X size={14} />
+                                                                        <X size={18} />
                                                                     </button>
                                                                 </div>
                                                             </div>
