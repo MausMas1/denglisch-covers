@@ -19,6 +19,11 @@ const initialGameState = {
     timerActive: false,    // Is timer currently running
     // QR Code visibility on Display
     showQRCode: false,
+    // Speed bonus settings (gold/silver/bronze medals)
+    speedBonusEnabled: true,
+    speedBonusGold: 3,
+    speedBonusSilver: 2,
+    speedBonusBronze: 1,
 };
 
 // Get songs from localStorage (metadata only) or use defaults
@@ -291,6 +296,40 @@ export function GameProvider({ children }) {
             const pointsPerAnswer = currentData?.pointsPerAnswer || 1;
             const teams = currentData?.teams || [];
 
+            // Speed bonus settings
+            const speedEnabled = currentData?.speedBonusEnabled ?? true;
+            const goldBonus = currentData?.speedBonusGold ?? 3;
+            const silverBonus = currentData?.speedBonusSilver ?? 2;
+            const bronzeBonus = currentData?.speedBonusBronze ?? 1;
+
+            // First pass: identify correct answers and sort by submission time
+            const correctAnswers = [];
+            teams.forEach(team => {
+                const teamAnswer = answers[team.name];
+                if (teamAnswer) {
+                    const hasCorrect = teamAnswer.titleCorrect === true || teamAnswer.artistCorrect === true;
+                    if (hasCorrect) {
+                        correctAnswers.push({
+                            teamName: team.name,
+                            submittedAt: teamAnswer.submittedAt || 0,
+                            titleCorrect: teamAnswer.titleCorrect === true,
+                            artistCorrect: teamAnswer.artistCorrect === true
+                        });
+                    }
+                }
+            });
+
+            // Sort by submission time (fastest first)
+            correctAnswers.sort((a, b) => a.submittedAt - b.submittedAt);
+
+            // Assign speed bonuses (gold, silver, bronze)
+            const speedBonuses = {};
+            if (speedEnabled && correctAnswers.length > 0) {
+                if (correctAnswers[0]) speedBonuses[correctAnswers[0].teamName] = { medal: 'gold', bonus: goldBonus };
+                if (correctAnswers[1]) speedBonuses[correctAnswers[1].teamName] = { medal: 'silver', bonus: silverBonus };
+                if (correctAnswers[2]) speedBonuses[correctAnswers[2].teamName] = { medal: 'bronze', bonus: bronzeBonus };
+            }
+
             // Calculate points for each team
             const pointsAwarded = {};
             const updatedTeams = teams.map(team => {
@@ -302,8 +341,17 @@ export function GameProvider({ children }) {
                     if (teamAnswer.artistCorrect === true) earnedPoints += pointsPerAnswer;
                 }
 
+                // Add speed bonus if applicable
+                const speedBonus = speedBonuses[team.name];
+                if (speedBonus) {
+                    earnedPoints += speedBonus.bonus;
+                }
+
                 if (earnedPoints > 0) {
-                    pointsAwarded[team.name] = earnedPoints;
+                    pointsAwarded[team.name] = {
+                        points: earnedPoints,
+                        medal: speedBonus?.medal || null
+                    };
                 }
 
                 return {

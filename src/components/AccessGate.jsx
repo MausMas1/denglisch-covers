@@ -6,6 +6,7 @@ import { ref, onValue } from 'firebase/database';
 
 const DEFAULT_ACCESS_CODE = '5555';
 const DEFAULT_ADMIN_PIN = '1230';
+const AUTH_VERSION = 'v2'; // Change this to invalidate all sessions
 
 function AccessGate({ children, requireAdmin = false }) {
     const [accessCode, setAccessCode] = useState('');
@@ -16,22 +17,26 @@ function AccessGate({ children, requireAdmin = false }) {
         adminPin: DEFAULT_ADMIN_PIN
     });
 
+    const PLAYER_KEY = `xmas-access-${AUTH_VERSION}`;
+    const ADMIN_KEY = `xmas-admin-${AUTH_VERSION}`;
+
     // Check if already unlocked in localStorage
     useEffect(() => {
-        const savedAccess = localStorage.getItem('xmas-access-unlocked');
-        const savedAdmin = localStorage.getItem('xmas-admin-unlocked');
-
         if (requireAdmin) {
-            // Admin requires ONLY the admin unlock, not the general access code
+            // Admin ONLY checks admin key - player key is irrelevant
+            const savedAdmin = localStorage.getItem(ADMIN_KEY);
             if (savedAdmin === 'true') {
                 setIsUnlocked(true);
             }
         } else {
-            if (savedAccess === 'true') {
+            // Player can access if they have player key OR admin key
+            const savedAccess = localStorage.getItem(PLAYER_KEY);
+            const savedAdmin = localStorage.getItem(ADMIN_KEY);
+            if (savedAccess === 'true' || savedAdmin === 'true') {
                 setIsUnlocked(true);
             }
         }
-    }, [requireAdmin]);
+    }, [requireAdmin, PLAYER_KEY, ADMIN_KEY]);
 
     // Listen to codes from Firebase
     useEffect(() => {
@@ -52,20 +57,27 @@ function AccessGate({ children, requireAdmin = false }) {
         e.preventDefault();
         setError('');
 
-        const requiredCode = requireAdmin ? correctCodes.adminPin : correctCodes.accessCode;
-
-        if (accessCode === requiredCode) {
-            setIsUnlocked(true);
-            if (requireAdmin) {
-                localStorage.setItem('xmas-admin-unlocked', 'true');
-                // Also set general access
-                localStorage.setItem('xmas-access-unlocked', 'true');
+        if (requireAdmin) {
+            // Admin page: ONLY accept admin PIN
+            if (accessCode === correctCodes.adminPin) {
+                setIsUnlocked(true);
+                localStorage.setItem(ADMIN_KEY, 'true');
             } else {
-                localStorage.setItem('xmas-access-unlocked', 'true');
+                setError('Onjuiste admin PIN');
+                setAccessCode('');
             }
         } else {
-            setError('Onjuiste code');
-            setAccessCode('');
+            // Player pages: accept player code (or admin pin as bonus)
+            if (accessCode === correctCodes.accessCode || accessCode === correctCodes.adminPin) {
+                setIsUnlocked(true);
+                localStorage.setItem(PLAYER_KEY, 'true');
+                if (accessCode === correctCodes.adminPin) {
+                    localStorage.setItem(ADMIN_KEY, 'true');
+                }
+            } else {
+                setError('Onjuiste code');
+                setAccessCode('');
+            }
         }
     };
 

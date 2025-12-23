@@ -18,6 +18,7 @@ import EnableDisplayButton from '../components/admin/EnableDisplayButton';
 import TimerSettings from '../components/admin/TimerSettings';
 import AccessCodeSettings from '../components/admin/AccessCodeSettings';
 import QRCodeToggle from '../components/admin/QRCodeToggle';
+import SpeedBonusSettings from '../components/admin/SpeedBonusSettings';
 
 function Admin() {
     const { isConnected, currentSong } = useGame();
@@ -94,6 +95,11 @@ function Admin() {
                 {/* Points Settings */}
                 <section>
                     <PointsSettings />
+                </section>
+
+                {/* Speed Bonus Settings */}
+                <section>
+                    <SpeedBonusSettings />
                 </section>
 
                 {/* Timer Settings */}

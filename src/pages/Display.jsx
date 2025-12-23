@@ -262,18 +262,28 @@ function Display() {
                                 <span className="text-2xl font-bold text-white">Punten Toegekend!</span>
                             </div>
                             <div className="space-y-2">
-                                {Object.entries(gameState.lastAwardedPoints).map(([teamName, points], index) => (
-                                    <motion.div
-                                        key={teamName}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="flex items-center justify-between gap-4 bg-christmas-green/20 rounded-xl px-4 py-2"
-                                    >
-                                        <span className="text-white font-medium">{teamName}</span>
-                                        <span className="text-christmas-gold font-bold text-xl">+{points}</span>
-                                    </motion.div>
-                                ))}
+                                {Object.entries(gameState.lastAwardedPoints).map(([teamName, data], index) => {
+                                    // Handle both old format (number) and new format (object with points + medal)
+                                    const points = typeof data === 'object' ? data.points : data;
+                                    const medal = typeof data === 'object' ? data.medal : null;
+                                    const medalEmoji = medal === 'gold' ? '🥇' : medal === 'silver' ? '🥈' : medal === 'bronze' ? '🥉' : '';
+
+                                    return (
+                                        <motion.div
+                                            key={teamName}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            className="flex items-center justify-between gap-4 bg-christmas-green/20 rounded-xl px-4 py-2"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                {medalEmoji && <span className="text-2xl">{medalEmoji}</span>}
+                                                <span className="text-white font-medium">{teamName}</span>
+                                            </div>
+                                            <span className="text-christmas-gold font-bold text-xl">+{points}</span>
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </motion.div>
