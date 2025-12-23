@@ -16,8 +16,9 @@ function LeaderOpening() {
             id: i,
             emoji: EMOJIS[i % EMOJIS.length],
             left: `${(i * 5) % 100}%`, // Spread evenly across width
-            delay: (i * 0.3) % 5,
-            duration: 8 + (i % 5),
+            startY: 100 + (i * 15) % 60, // Stagger start: 100% to 160% (below screen)
+            delay: (i * 0.4) % 8, // Stagger delays more
+            duration: 10 + (i % 6) * 2, // Vary durations: 10-20s
         })), []
     );
 
@@ -35,7 +36,7 @@ function LeaderOpening() {
                         key={particle.id}
                         className="absolute text-4xl"
                         style={{ left: particle.left }}
-                        initial={{ y: '110%', opacity: 0.6 }}
+                        initial={{ y: `${particle.startY}%`, opacity: 0.6 }}
                         animate={{ y: '-10%', rotate: 360 }}
                         transition={{
                             duration: particle.duration,
