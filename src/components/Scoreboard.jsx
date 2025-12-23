@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { Trophy, ArrowUp, ArrowDown, Check } from 'lucide-react';
 import { useGame } from '../context/GameContext';
+import { db } from '../firebase';
+import { ref, onValue } from 'firebase/database';
 
-function Scoreboard() {
+function Scoreboard({ currentSongId }) {
     const { gameState } = useGame();
     const teams = gameState.teams || [];
     const [positionChanges, setPositionChanges] = useState({});
+    const [submittedTeams, setSubmittedTeams] = useState({});
     const prevPositionsRef = useRef({});
     const prevScoresRef = useRef({});
 
@@ -21,6 +24,31 @@ function Scoreboard() {
         });
         return positions;
     };
+
+    // Listen to answers for current song
+    useEffect(() => {
+        if (!currentSongId) {
+            setSubmittedTeams({});
+            return;
+        }
+
+        const answersRef = ref(db, `answers/${currentSongId}`);
+        const unsubscribe = onValue(answersRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // data is { teamName: { artist, title, ... }, ... }
+                const submitted = {};
+                Object.keys(data).forEach(teamName => {
+                    submitted[teamName] = true;
+                });
+                setSubmittedTeams(submitted);
+            } else {
+                setSubmittedTeams({});
+            }
+        });
+
+        return () => unsubscribe();
+    }, [currentSongId]);
 
     // Detect position and score changes
     useEffect(() => {
@@ -128,6 +156,16 @@ function Scoreboard() {
                                     <span className="text-snow/90 text-sm">{team.name}</span>
                                     {/* Position change indicator */}
                                     {getPositionIcon(team.id)}
+                                    {/* Answer submitted indicator */}
+                                    {submittedTeams[team.name] && !gameState.isRevealed && (
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="text-green-400"
+                                        >
+                                            <Check size={14} />
+                                        </motion.div>
+                                    )}
                                 </div>
                                 <motion.span
                                     key={`${team.id}-${team.score}`}
@@ -147,4 +185,3 @@ function Scoreboard() {
 }
 
 export default Scoreboard;
-

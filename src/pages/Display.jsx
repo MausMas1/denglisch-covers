@@ -6,7 +6,6 @@ import { db } from '../firebase';
 import { ref, set, onValue } from 'firebase/database';
 import Snowfall from '../components/Snowfall';
 import ChristmasLights from '../components/ChristmasLights';
-import AudioVisualizer from '../components/AudioVisualizer';
 import ProgressBar from '../components/ProgressBar';
 import Confetti from '../components/Confetti';
 import Scoreboard from '../components/Scoreboard';
@@ -256,7 +255,7 @@ function Display() {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50"
+                        className="fixed bottom-56 right-6 z-50"
                     >
                         <div className="glass rounded-2xl p-6 border-2 border-christmas-gold shadow-2xl">
                             <div className="flex items-center gap-3 mb-4">
@@ -440,15 +439,12 @@ function Display() {
                     </div>
                 )}
 
-                {/* Audio Visualizer */}
-                <div className="w-full max-w-2xl mb-8">
-                    <AudioVisualizer isPlaying={gameState.isPlaying} audioRef={audioRef} />
-                </div>
+
 
 
             </div>
 
-            <Scoreboard />
+            <Scoreboard currentSongId={currentSong?.id} />
         </div>
     );
 }
