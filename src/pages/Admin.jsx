@@ -58,11 +58,6 @@ function Admin() {
 
             {/* Main Content */}
             <main className="px-4 py-6 space-y-6 pb-20">
-                {/* Leader Song / Opening */}
-                <section>
-                    <LeaderControls />
-                </section>
-
                 {/* Current Song */}
                 <section>
                     <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
@@ -90,12 +85,22 @@ function Admin() {
                     <PlaybackControls />
                 </section>
 
-                {/* Game Controls */}
+                {/* Game Controls (Reveal/Lyrics/Next) */}
                 <section>
                     <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Spelverloop
                     </h2>
                     <GameControls />
+                </section>
+
+                {/* Incoming Answers Panel - directly under reveal */}
+                <section className="bg-gray-800/50 rounded-2xl p-4 border border-christmas-gold/20">
+                    <AnswersPanel songId={currentSong?.id} songTitle={currentSong?.titleOriginal} />
+                </section>
+
+                {/* Timer Settings - under answers */}
+                <section>
+                    <TimerSettings />
                 </section>
 
                 {/* Points Settings */}
@@ -106,16 +111,6 @@ function Admin() {
                 {/* Speed Bonus Settings */}
                 <section>
                     <SpeedBonusSettings />
-                </section>
-
-                {/* Timer Settings */}
-                <section>
-                    <TimerSettings />
-                </section>
-
-                {/* Incoming Answers Panel */}
-                <section className="bg-gray-800/50 rounded-2xl p-4 border border-christmas-gold/20">
-                    <AnswersPanel songId={currentSong?.id} songTitle={currentSong?.titleOriginal} />
                 </section>
 
                 {/* Score Manager */}
@@ -136,6 +131,11 @@ function Admin() {
                 {/* Soundboard */}
                 <section className="bg-gray-800/50 rounded-2xl p-4">
                     <Soundboard />
+                </section>
+
+                {/* Leader Song / Opening - after soundboard */}
+                <section>
+                    <LeaderControls />
                 </section>
 
                 {/* Reset Controls */}

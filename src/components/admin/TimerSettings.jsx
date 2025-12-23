@@ -4,6 +4,7 @@ import { useGame } from '../../context/GameContext';
 
 const TIMER_PRESETS = [
     { label: 'Uit', value: 0 },
+    { label: '15s', value: 15 },
     { label: '30s', value: 30 },
     { label: '45s', value: 45 },
     { label: '60s', value: 60 },
@@ -31,8 +32,8 @@ function TimerSettings() {
                         onClick={() => setTimerDuration(preset.value)}
                         disabled={timerActive}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${currentDuration === preset.value
-                                ? 'bg-christmas-gold text-black'
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            ? 'bg-christmas-gold text-black'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                             } ${timerActive ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {preset.label}

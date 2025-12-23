@@ -1,11 +1,26 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import QRCode from './QRCode';
+
+// Emoji particles data - generated once
+const EMOJIS = ['🎄', '🎁', '⭐', '🎵', '🎉', '❄️', '🔔'];
 
 /**
  * Opening animation shown on Display when leader song is playing
  * Shows QR code prominently with festive animation
  */
 function LeaderOpening() {
+    // Generate stable random positions for particles
+    const particles = useMemo(() =>
+        [...Array(20)].map((_, i) => ({
+            id: i,
+            emoji: EMOJIS[i % EMOJIS.length],
+            left: `${(i * 5) % 100}%`, // Spread evenly across width
+            delay: (i * 0.3) % 5,
+            duration: 8 + (i % 5),
+        })), []
+    );
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -15,27 +30,21 @@ function LeaderOpening() {
         >
             {/* Animated background particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(20)].map((_, i) => (
+                {particles.map((particle) => (
                     <motion.div
-                        key={i}
+                        key={particle.id}
                         className="absolute text-4xl"
-                        initial={{
-                            x: Math.random() * 100 + '%',
-                            y: '110%',
-                            opacity: 0.6
-                        }}
-                        animate={{
-                            y: '-10%',
-                            rotate: 360
-                        }}
+                        style={{ left: particle.left }}
+                        initial={{ y: '110%', opacity: 0.6 }}
+                        animate={{ y: '-10%', rotate: 360 }}
                         transition={{
-                            duration: 8 + Math.random() * 4,
+                            duration: particle.duration,
                             repeat: Infinity,
-                            delay: Math.random() * 5,
+                            delay: particle.delay,
                             ease: 'linear'
                         }}
                     >
-                        {['🎄', '🎁', '⭐', '🎵', '🎉', '❄️', '🔔'][i % 7]}
+                        {particle.emoji}
                     </motion.div>
                 ))}
             </div>
