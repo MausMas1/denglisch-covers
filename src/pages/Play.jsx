@@ -350,7 +350,7 @@ function Play() {
 
     // Active guessing state
     return (
-        <div className="min-h-screen animated-gradient flex flex-col p-4">
+        <div className="min-h-screen animated-gradient flex flex-col p-4 pb-20">
             {/* Header */}
             <div className="glass rounded-2xl p-4 mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -429,7 +429,7 @@ function Play() {
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleSubmit}
                                 disabled={!artistGuess.trim() || !titleGuess.trim()}
-                                className="w-full bg-gradient-to-r from-christmas-green to-christmas-gold text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6"
+                                className="w-full bg-gradient-to-r from-christmas-green to-christmas-gold text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6 mb-4"
                             >
                                 <Send size={20} />
                                 <span>Bevestig Antwoord</span>

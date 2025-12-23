@@ -9,7 +9,6 @@ import ChristmasLights from '../components/ChristmasLights';
 import ProgressBar from '../components/ProgressBar';
 import Confetti from '../components/Confetti';
 import Scoreboard from '../components/Scoreboard';
-import TeamPopups from '../components/TeamPopups';
 import LyricsDisplay from '../components/LyricsDisplay';
 import FlyingEmojis from '../components/FlyingEmojis';
 import TypingIndicators from '../components/TypingIndicators';
@@ -124,19 +123,11 @@ function Display() {
 
     // Trigger confetti on reveal
     useEffect(() => {
-        console.log('Reveal effect triggered:', {
-            isRevealed: gameState.isRevealed,
-            wasRevealed,
-            lastAwardedPoints: gameState.lastAwardedPoints
-        });
-
         if (gameState.isRevealed && !wasRevealed) {
             setShowConfetti(true);
             setWasRevealed(true);
-            console.log('Setting showAwardPopup, lastAwardedPoints:', gameState.lastAwardedPoints);
             // Show award popup if points were awarded
             if (gameState.lastAwardedPoints && Object.keys(gameState.lastAwardedPoints).length > 0) {
-                console.log('SHOWING AWARD POPUP');
                 setShowAwardPopup(true);
                 setTimeout(() => setShowAwardPopup(false), 5000);
             }
@@ -229,7 +220,7 @@ function Display() {
             <ChristmasLights />
             <Confetti isActive={showConfetti} />
             <FlyingEmojis />
-            {!gameState.isRevealed && <TeamPopups songId={currentSong?.id} />}
+
             {!gameState.isRevealed && <TypingIndicators songId={currentSong?.id} />}
             {!gameState.isRevealed && <CountdownTimer />}
             <StatisticsOverlay />
