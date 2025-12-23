@@ -3,9 +3,12 @@ import { motion } from 'framer-motion';
 
 function QRCode({ size = 200 }) {
     // Get the current host for the QR code URL
+    const baseUrl = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
+    const playPath = `${baseUrl}/play`;
+
     const playUrl = typeof window !== 'undefined'
-        ? `${window.location.origin}/play`
-        : '/play';
+        ? `${window.location.origin}${playPath}`
+        : playPath;
 
     return (
         <motion.div
@@ -29,7 +32,7 @@ function QRCode({ size = 200 }) {
             </div>
 
             <p className="text-snow/60 text-sm mt-4">
-                Of ga naar: <span className="text-christmas-gold font-mono">/play</span>
+                Of ga naar: <span className="text-christmas-gold font-mono">{playPath}</span>
             </p>
         </motion.div>
     );
