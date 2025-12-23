@@ -401,7 +401,7 @@ function Play() {
                                 Wat is dit nummer? 🎵
                             </h2>
 
-                            <div className="space-y-4 flex-1">
+                            <div className="space-y-4">
                                 <div>
                                     <label className="block text-snow/70 text-sm mb-2">Titel</label>
                                     <input

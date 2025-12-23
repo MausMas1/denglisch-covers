@@ -22,7 +22,8 @@ function AccessGate({ children, requireAdmin = false }) {
         const savedAdmin = localStorage.getItem('xmas-admin-unlocked');
 
         if (requireAdmin) {
-            if (savedAdmin === 'true' && savedAccess === 'true') {
+            // Admin requires ONLY the admin unlock, not the general access code
+            if (savedAdmin === 'true') {
                 setIsUnlocked(true);
             }
         } else {
