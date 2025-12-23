@@ -317,7 +317,7 @@ function Play() {
                             <div className="flex flex-col items-center gap-1">
                                 <div className="flex items-center gap-2">
                                     <Trophy className="text-christmas-gold" size={24} />
-                                    <span className="text-2xl font-bold text-christmas-green">
+                                    <span className="text-2xl font-bold text-white">
                                         +{totalPoints} punt{totalPoints !== 1 ? 'en' : ''}!
                                     </span>
                                 </div>
