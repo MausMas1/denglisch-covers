@@ -23,15 +23,34 @@ function AnswerHistory() {
 
     const teams = gameState.teams || [];
 
+    // Get submission position for a team's answer on a specific song
+    const getSubmissionPosition = (songId, teamName) => {
+        const songAnswers = allAnswers[songId];
+        if (!songAnswers || !songAnswers[teamName]) return null;
+
+        const teamTimestamp = songAnswers[teamName].submittedAt;
+        if (!teamTimestamp) return null;
+
+        // Sort all answers for this song by submittedAt
+        const sortedTeams = Object.entries(songAnswers)
+            .filter(([, a]) => a.submittedAt)
+            .sort(([, a], [, b]) => a.submittedAt - b.submittedAt);
+
+        const position = sortedTeams.findIndex(([name]) => name === teamName) + 1;
+        return position > 0 ? position : null;
+    };
+
     // Get all answers for a specific team
     const getTeamAnswers = (teamName) => {
         const teamAnswers = [];
         Object.entries(allAnswers).forEach(([songId, songAnswers]) => {
             if (songAnswers && songAnswers[teamName]) {
                 const song = songs.find(s => s.id === parseInt(songId));
+                const position = getSubmissionPosition(songId, teamName);
                 teamAnswers.push({
                     songId: parseInt(songId),
                     songTitle: song?.titleOriginal || `Nummer ${songId}`,
+                    position,
                     ...songAnswers[teamName]
                 });
             }
@@ -126,9 +145,20 @@ function AnswerHistory() {
                                                         ) : (
                                                             teamAnswers.map((answer) => (
                                                                 <div key={answer.songId} className="bg-gray-800/50 rounded-lg p-2 text-sm">
-                                                                    <div className="flex items-center gap-2 mb-1 text-gray-400">
-                                                                        <Music size={12} />
-                                                                        <span className="text-xs">{answer.songTitle}</span>
+                                                                    <div className="flex items-center justify-between mb-1">
+                                                                        <div className="flex items-center gap-2 text-gray-400">
+                                                                            <Music size={12} />
+                                                                            <span className="text-xs">{answer.songTitle}</span>
+                                                                        </div>
+                                                                        {answer.position && (
+                                                                            <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${answer.position === 1 ? 'bg-yellow-600 text-white' :
+                                                                                    answer.position === 2 ? 'bg-gray-400 text-white' :
+                                                                                        answer.position === 3 ? 'bg-amber-700 text-white' :
+                                                                                            'bg-gray-600 text-gray-300'
+                                                                                }`}>
+                                                                                #{answer.position}
+                                                                            </span>
+                                                                        )}
                                                                     </div>
                                                                     <div className="grid grid-cols-2 gap-2">
                                                                         <div>
