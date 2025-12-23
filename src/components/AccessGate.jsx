@@ -13,7 +13,7 @@ function AccessGate({ children, requireAdmin = false }) {
     const ADMIN_KEY = `xmas-admin-${AUTH_VERSION}`;
 
     // Check localStorage synchronously to determine initial unlock state
-    const getInitialUnlockState = () => {
+    const checkUnlockState = () => {
         if (requireAdmin) {
             return localStorage.getItem(ADMIN_KEY) === 'true';
         } else {
@@ -22,12 +22,18 @@ function AccessGate({ children, requireAdmin = false }) {
     };
 
     const [accessCode, setAccessCode] = useState('');
-    const [isUnlocked, setIsUnlocked] = useState(getInitialUnlockState);
+    const [isUnlocked, setIsUnlocked] = useState(checkUnlockState);
     const [error, setError] = useState('');
     const [correctCodes, setCorrectCodes] = useState({
         accessCode: DEFAULT_ACCESS_CODE,
         adminPin: DEFAULT_ADMIN_PIN
     });
+
+    // Re-check unlock state when requireAdmin prop changes (navigation between routes)
+    useEffect(() => {
+        const shouldBeUnlocked = checkUnlockState();
+        setIsUnlocked(shouldBeUnlocked);
+    }, [requireAdmin]);
 
     // Listen to codes from Firebase
     useEffect(() => {
