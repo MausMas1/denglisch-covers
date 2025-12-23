@@ -228,18 +228,6 @@ function Display() {
             <StatisticsOverlay />
             <DisplayQRCode />
 
-            {/* Debug Info */}
-            <div className="fixed bottom-0 left-0 bg-black/80 text-white text-[10px] p-2 z-50 font-mono pointer-events-none opacity-50">
-                State: {gameState.isPlaying ? 'PLAYING' : 'PAUSED'} | Reveal: {gameState.isRevealed ? 'YES' : 'NO'} |
-                AudioEnabled: {audioEnabled ? 'YES' : 'NO'} |
-                Song: {currentSong?.id} |
-                Src: {currentAudioUrl?.substring(0, 50)}...
-                <br />
-                Time: {audioRef.current?.currentTime?.toFixed(1) || 0} / {audioRef.current?.duration?.toFixed(1) || 0}
-                <br />
-                Error: {audioRef.current?.error ? audioRef.current.error.message + ' (' + audioRef.current.error.code + ')' : 'None'}
-            </div>
-
             {/* Karaoke Lyrics Display - centered, adjusts for reveal */}
             {gameState.showLyrics && (
                 (() => {
