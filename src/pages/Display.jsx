@@ -124,11 +124,19 @@ function Display() {
 
     // Trigger confetti on reveal
     useEffect(() => {
+        console.log('Reveal effect triggered:', {
+            isRevealed: gameState.isRevealed,
+            wasRevealed,
+            lastAwardedPoints: gameState.lastAwardedPoints
+        });
+
         if (gameState.isRevealed && !wasRevealed) {
             setShowConfetti(true);
             setWasRevealed(true);
+            console.log('Setting showAwardPopup, lastAwardedPoints:', gameState.lastAwardedPoints);
             // Show award popup if points were awarded
             if (gameState.lastAwardedPoints && Object.keys(gameState.lastAwardedPoints).length > 0) {
+                console.log('SHOWING AWARD POPUP');
                 setShowAwardPopup(true);
                 setTimeout(() => setShowAwardPopup(false), 5000);
             }
