@@ -50,7 +50,7 @@ function CountdownTimer({ onTimeUp }) {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    className="fixed bottom-72 right-6 z-50"
+                    className="fixed top-6 right-6 z-50"
                 >
                     <motion.div
                         animate={{

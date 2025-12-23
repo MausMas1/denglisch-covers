@@ -255,7 +255,7 @@ function Display() {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className="fixed bottom-56 right-6 z-50"
+                        className="fixed top-6 right-6 z-50"
                     >
                         <div className="glass rounded-2xl p-6 border-2 border-christmas-gold shadow-2xl">
                             <div className="flex items-center gap-3 mb-4">
