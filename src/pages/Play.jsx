@@ -281,7 +281,11 @@ function Play() {
 
     // Revealed state - show correct answer + points
     if (gameState.isRevealed) {
-        const earnedPoints = getEarnedPoints();
+        const basePoints = getEarnedPoints();
+        const awardedInfo = gameState.lastAwardedPoints?.[teamName];
+        const totalPoints = awardedInfo?.points || basePoints;
+        const speedBonus = totalPoints - basePoints;
+        const medal = awardedInfo?.medal;
 
         return (
             <div className="min-h-screen animated-gradient flex items-center justify-center p-4">
@@ -303,18 +307,32 @@ function Play() {
                     </div>
 
                     {/* Points earned */}
-                    {earnedPoints > 0 && (
+                    {totalPoints > 0 && (
                         <motion.div
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
                             className="bg-christmas-green/20 rounded-2xl p-4 mb-4 border border-christmas-green/50"
                         >
-                            <div className="flex items-center justify-center gap-2">
-                                <Trophy className="text-christmas-gold" size={24} />
-                                <span className="text-2xl font-bold text-christmas-green">
-                                    +{earnedPoints} punt{earnedPoints !== 1 ? 'en' : ''}!
-                                </span>
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="flex items-center gap-2">
+                                    <Trophy className="text-christmas-gold" size={24} />
+                                    <span className="text-2xl font-bold text-christmas-green">
+                                        +{totalPoints} punt{totalPoints !== 1 ? 'en' : ''}!
+                                    </span>
+                                </div>
+                                {/* Breakdown */}
+                                <div className="flex items-center gap-3 text-sm text-gray-300">
+                                    <span>🎵 {basePoints} basis</span>
+                                    {speedBonus > 0 && (
+                                        <span className="flex items-center gap-1">
+                                            {medal === 'gold' && '🥇'}
+                                            {medal === 'silver' && '🥈'}
+                                            {medal === 'bronze' && '🥉'}
+                                            +{speedBonus} snelheid
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         </motion.div>
                     )}

@@ -40,6 +40,31 @@ function AnswerHistory() {
         return position > 0 ? position : null;
     };
 
+    // Calculate points for an answer (base + speed bonus if both correct)
+    const calculateAnswerPoints = (answer, position) => {
+        const ppa = gameState.pointsPerAnswer || 1;
+        let basePoints = 0;
+        if (answer.titleCorrect === true) basePoints += ppa;
+        if (answer.artistCorrect === true) basePoints += ppa;
+
+        // Speed bonus only if both correct
+        let speedBonus = 0;
+        if (answer.titleCorrect === true && answer.artistCorrect === true && position) {
+            const goldBonus = gameState.speedBonusGold ?? 3;
+            const silverBonus = gameState.speedBonusSilver ?? 2;
+            const bronzeBonus = gameState.speedBonusBronze ?? 1;
+            const speedEnabled = gameState.speedBonusEnabled !== false;
+
+            if (speedEnabled) {
+                if (position === 1) speedBonus = goldBonus;
+                else if (position === 2) speedBonus = silverBonus;
+                else if (position === 3) speedBonus = bronzeBonus;
+            }
+        }
+
+        return { basePoints, speedBonus, totalPoints: basePoints + speedBonus };
+    };
+
     // Get all answers for a specific team
     const getTeamAnswers = (teamName) => {
         const teamAnswers = [];
@@ -47,11 +72,14 @@ function AnswerHistory() {
             if (songAnswers && songAnswers[teamName]) {
                 const song = songs.find(s => s.id === parseInt(songId));
                 const position = getSubmissionPosition(songId, teamName);
+                const answer = songAnswers[teamName];
+                const points = calculateAnswerPoints(answer, position);
                 teamAnswers.push({
                     songId: parseInt(songId),
                     songTitle: song?.titleOriginal || `Nummer ${songId}`,
                     position,
-                    ...songAnswers[teamName]
+                    points,
+                    ...answer
                 });
             }
         });
@@ -152,11 +180,20 @@ function AnswerHistory() {
                                                                         </div>
                                                                         {answer.position && (
                                                                             <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${answer.position === 1 ? 'bg-yellow-600 text-white' :
-                                                                                    answer.position === 2 ? 'bg-gray-400 text-white' :
-                                                                                        answer.position === 3 ? 'bg-amber-700 text-white' :
-                                                                                            'bg-gray-600 text-gray-300'
+                                                                                answer.position === 2 ? 'bg-gray-400 text-white' :
+                                                                                    answer.position === 3 ? 'bg-amber-700 text-white' :
+                                                                                        'bg-gray-600 text-gray-300'
                                                                                 }`}>
                                                                                 #{answer.position}
+                                                                            </span>
+                                                                        )}
+                                                                        {/* Points display */}
+                                                                        {answer.points && answer.points.totalPoints > 0 && (
+                                                                            <span className="text-xs text-christmas-gold font-medium">
+                                                                                +{answer.points.totalPoints}p
+                                                                                {answer.points.speedBonus > 0 && (
+                                                                                    <span className="text-gray-400"> ({answer.points.basePoints}+{answer.points.speedBonus})</span>
+                                                                                )}
                                                                             </span>
                                                                         )}
                                                                     </div>
