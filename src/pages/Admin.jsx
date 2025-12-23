@@ -20,6 +20,7 @@ import AccessCodeSettings from '../components/admin/AccessCodeSettings';
 import QRCodeToggle from '../components/admin/QRCodeToggle';
 import SpeedBonusSettings from '../components/admin/SpeedBonusSettings';
 import LeaderControls from '../components/admin/LeaderControls';
+import FinalControls from '../components/admin/FinalControls';
 
 function Admin() {
     const { isConnected, currentSong } = useGame();
@@ -136,6 +137,11 @@ function Admin() {
                 {/* Leader Song / Opening - after soundboard */}
                 <section>
                     <LeaderControls />
+                </section>
+
+                {/* Final Standings Reveal */}
+                <section>
+                    <FinalControls />
                 </section>
 
                 {/* Reset Controls */}

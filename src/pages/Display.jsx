@@ -16,6 +16,7 @@ import CountdownTimer from '../components/CountdownTimer';
 import StatisticsOverlay from '../components/StatisticsOverlay';
 import DisplayQRCode from '../components/DisplayQRCode';
 import LeaderOpening from '../components/LeaderOpening';
+import FinalPodium from '../components/FinalPodium';
 
 function Display() {
     const { gameState, currentSong, audioRef, getActiveAudioUrl } = useGame();
@@ -76,6 +77,42 @@ function Display() {
             }
         };
     }, [gameState.leaderPlaying, gameState.leaderUrl, audioEnabled]);
+
+    // Handle final reveal music playback
+    const finalAudioRef = useRef(null);
+    useEffect(() => {
+        if (!audioEnabled) return;
+
+        if (gameState.finalPlaying && gameState.finalUrl) {
+            // Stop regular audio if playing
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+            // Stop leader audio if playing
+            if (leaderAudioRef.current) {
+                leaderAudioRef.current.pause();
+            }
+
+            // Create and play final audio
+            if (!finalAudioRef.current) {
+                finalAudioRef.current = new Audio();
+            }
+            finalAudioRef.current.src = gameState.finalUrl;
+            finalAudioRef.current.play().catch(console.error);
+        } else {
+            // Stop final audio
+            if (finalAudioRef.current) {
+                finalAudioRef.current.pause();
+                finalAudioRef.current.src = '';
+            }
+        }
+
+        return () => {
+            if (finalAudioRef.current) {
+                finalAudioRef.current.pause();
+            }
+        };
+    }, [gameState.finalPlaying, gameState.finalUrl, audioEnabled]);
 
     // Handle song transitions
     useEffect(() => {
@@ -264,6 +301,11 @@ function Display() {
             {/* Leader Opening Animation */}
             <AnimatePresence>
                 {gameState.leaderPlaying && <LeaderOpening />}
+            </AnimatePresence>
+
+            {/* Final Podium Reveal */}
+            <AnimatePresence>
+                {gameState.finalPlaying && <FinalPodium />}
             </AnimatePresence>
 
             {!gameState.isRevealed && <TypingIndicators songId={currentSong?.id} />}
