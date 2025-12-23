@@ -474,7 +474,7 @@ function Display() {
                         className={`w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 transition-all duration-500 ${gameState.isRevealed ? 'border-christmas-gold neon-glow' : 'border-christmas-gold/30'
                             }`}
                         style={{
-                            filter: shouldBlur ? 'blur(20px) brightness(0.7)' : 'blur(0) brightness(1)',
+                            filter: shouldBlur ? 'blur(50px) brightness(0.4) saturate(0.5)' : 'blur(0) brightness(1) saturate(1)',
                             transform: shouldBlur ? 'scale(1.1)' : 'scale(1)',
                             color: '#f59e0b',
                         }}
