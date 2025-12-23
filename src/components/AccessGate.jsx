@@ -22,11 +22,19 @@ function AccessGate({ children, requireAdmin = false }) {
 
     // Check if already unlocked in localStorage
     useEffect(() => {
+        console.log('AccessGate mount - requireAdmin:', requireAdmin);
+        console.log('PLAYER_KEY:', PLAYER_KEY, 'value:', localStorage.getItem(PLAYER_KEY));
+        console.log('ADMIN_KEY:', ADMIN_KEY, 'value:', localStorage.getItem(ADMIN_KEY));
+
         if (requireAdmin) {
             // Admin ONLY checks admin key - player key is irrelevant
             const savedAdmin = localStorage.getItem(ADMIN_KEY);
+            console.log('Admin check - savedAdmin:', savedAdmin);
             if (savedAdmin === 'true') {
+                console.log('UNLOCKING - admin key found');
                 setIsUnlocked(true);
+            } else {
+                console.log('NOT UNLOCKED - no admin key');
             }
         } else {
             // Player can access if they have player key OR admin key
