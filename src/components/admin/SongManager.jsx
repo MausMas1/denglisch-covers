@@ -159,7 +159,12 @@ function SongManager() {
         if (!filename) return;
 
         // Handle both local files and external URLs (Firebase Storage)
-        const audioUrl = filename.startsWith('http') ? filename : `/audio/${filename}`;
+        const baseUrl = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
+        let audioUrl = filename;
+        if (!filename.startsWith('http')) {
+            const cleanPath = filename.startsWith('/') ? filename.slice(1) : `audio/${filename}`;
+            audioUrl = `${baseUrl}/${cleanPath}`;
+        }
 
         if (playingId === song.id && playingType === type) {
             audioRef.current?.pause();
@@ -214,9 +219,9 @@ function SongManager() {
                         <div className="p-4 pt-0 space-y-4">
                             {/* API Error Warning - Only show on localhost */}
                             {apiError && window.location.hostname === 'localhost' && (
-                                <div className="flex items-center gap-2 p-3 bg-red-900/50 rounded-lg text-red-300 text-sm">
+                                <div className="flex items-center gap-2 p-3 bg-yellow-900/50 rounded-lg text-yellow-300 text-sm">
                                     <AlertCircle size={16} />
-                                    <span>File API niet bereikbaar. Start: npm run file-api</span>
+                                    <span>Lokale API niet bereikbaar (alleen voor lokale bestanden). Gebruik Firebase voor online gebruik.</span>
                                 </div>
                             )}
 

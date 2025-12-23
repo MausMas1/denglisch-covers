@@ -59,21 +59,23 @@ export function GameProvider({ children }) {
     const getActiveAudioUrl = (song, isRevealed) => {
         if (!song) return '';
 
+        const getUrl = (file) => {
+            if (!file) return '';
+            if (file.startsWith('http')) return file;
+
+            // Handle local files
+            const baseUrl = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
+            const cleanPath = file.startsWith('/') ? file.slice(1) : `audio/${file}`;
+            return `${baseUrl}/${cleanPath}`;
+        };
+
         if (isRevealed) {
             const dutchFile = song.audioFileDutch || song.audioUrlDutch;
-            if (dutchFile) {
-                return dutchFile.startsWith('/') || dutchFile.startsWith('http')
-                    ? dutchFile
-                    : `/audio/${dutchFile}`;
-            }
+            if (dutchFile) return getUrl(dutchFile);
         }
 
         const englishFile = song.audioFileEnglish || song.audioUrlEnglish || song.audioUrl;
-        if (englishFile) {
-            return englishFile.startsWith('/') || englishFile.startsWith('http')
-                ? englishFile
-                : `/audio/${englishFile}`;
-        }
+        if (englishFile) return getUrl(englishFile);
 
         return '';
     };
