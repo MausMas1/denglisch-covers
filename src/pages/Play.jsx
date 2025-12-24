@@ -593,11 +593,17 @@ function Play() {
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleSubmit}
                                 disabled={!artistGuess.trim() || !titleGuess.trim()}
-                                className="w-full bg-gradient-to-r from-christmas-green to-christmas-gold text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6 mb-4"
+                                className="w-full bg-gradient-to-r from-christmas-green to-christmas-gold text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6 mb-2"
                             >
                                 <Send size={20} />
                                 <span>Bevestig Antwoord</span>
                             </motion.button>
+
+                            {/* Points info */}
+                            <p className="text-center text-snow/50 text-xs">
+                                💰 {gameState.pointsPerAnswer || 1}p per correct antwoord (max {(gameState.pointsPerAnswer || 1) * 2}p)
+                                {gameState.speedBonusEnabled && " + snelheidsbonus"}
+                            </p>
                         </motion.div>
                     ) : (
                         <motion.div

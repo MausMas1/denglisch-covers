@@ -525,6 +525,24 @@ function Display() {
                         />
                     </div>
 
+                    {/* Points info badge - only when not revealed */}
+                    {!gameState.isRevealed && !isTransitioning && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-4 glass px-4 py-2 rounded-full border border-christmas-gold/30"
+                        >
+                            <span className="text-snow/70 text-sm">
+                                💰 <span className="text-christmas-gold font-medium">{(gameState.pointsPerAnswer || 1) * 2}</span> punten te verdienen
+                                {gameState.speedBonusEnabled && (
+                                    <span className="text-snow/50 ml-2">
+                                        + 🥇{gameState.speedBonusGold || 3} 🥈{gameState.speedBonusSilver || 2} 🥉{gameState.speedBonusBronze || 1}
+                                    </span>
+                                )}
+                            </span>
+                        </motion.div>
+                    )}
+
                     {/* Playing indicator - fixed at bottom to not overlap lyrics */}
                     <AnimatePresence>
                         {gameState.isPlaying && !gameState.isRevealed && !isTransitioning && (
