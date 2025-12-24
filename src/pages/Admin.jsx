@@ -7,9 +7,7 @@ import PlaybackControls from '../components/admin/PlaybackControls';
 import GameControls from '../components/admin/GameControls';
 import SongSelector from '../components/admin/SongSelector';
 import ScoreManager from '../components/admin/ScoreManager';
-import Soundboard from '../components/admin/Soundboard';
 import AnswersPanel from '../components/admin/AnswersPanel';
-import QRCode from '../components/QRCode';
 import SeekableProgressBar from '../components/admin/SeekableProgressBar';
 import PointsSettings from '../components/admin/PointsSettings';
 import ResetControls from '../components/admin/ResetControls';
@@ -131,17 +129,7 @@ function Admin() {
                     <SongSelector />
                 </section>
 
-                {/* QR Code for Participants */}
-                <section className="bg-gray-800/50 rounded-2xl p-4">
-                    <QRCode size={150} />
-                </section>
-
-                {/* Soundboard */}
-                <section className="bg-gray-800/50 rounded-2xl p-4">
-                    <Soundboard />
-                </section>
-
-                {/* Leader Song / Opening - after soundboard */}
+                {/* Leader Song / Opening */}
                 <section>
                     <LeaderControls />
                 </section>
