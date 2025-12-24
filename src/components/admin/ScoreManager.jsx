@@ -4,7 +4,7 @@ import { Plus, Minus, Trophy, Trash2, Edit2, UserPlus, RotateCcw, Check, X } fro
 import { useGame } from '../../context/GameContext';
 
 function ScoreManager() {
-    const { gameState, updateScore, addTeam, removeTeam, renameTeam, resetScores } = useGame();
+    const { gameState, updateScore, addTeam, removeTeam, renameTeam, toggleTurtleMode, resetScores } = useGame();
     const teams = gameState.teams || [];
 
     const [editingId, setEditingId] = useState(null);
@@ -157,6 +157,9 @@ function ScoreManager() {
                                         <span className="text-sm">👑</span>
                                     )}
                                     <span className="text-white font-medium truncate">{team.name}</span>
+                                    {team.turtleMode && (
+                                        <span className="text-sm" title="Schildpad modus actief">🐢</span>
+                                    )}
                                     <motion.button
                                         whileTap={{ scale: 0.9 }}
                                         onClick={() => handleStartEdit(team)}
@@ -164,6 +167,14 @@ function ScoreManager() {
                                         title="Naam bewerken"
                                     >
                                         <Edit2 size={12} />
+                                    </motion.button>
+                                    <motion.button
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={() => toggleTurtleMode(team.id)}
+                                        className={`p-1 rounded transition-colors ${team.turtleMode ? 'text-green-400 bg-green-400/20' : 'text-gray-500 hover:text-green-400'}`}
+                                        title={team.turtleMode ? "Schildpad modus uit" : "Schildpad modus aan (-8 sec)"}
+                                    >
+                                        🐢
                                     </motion.button>
                                 </div>
                             </div>

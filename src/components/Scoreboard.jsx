@@ -154,6 +154,10 @@ function Scoreboard({ currentSongId }) {
                                         <span className="text-christmas-gold">👑</span>
                                     )}
                                     <span className="text-snow/90 text-sm">{team.name}</span>
+                                    {/* Turtle mode indicator */}
+                                    {team.turtleMode && (
+                                        <span className="text-sm" title="Schildpad modus (-8 sec)">🐢</span>
+                                    )}
                                     {/* Position change indicator */}
                                     {getPositionIcon(team.id)}
                                     {/* Answer submitted indicator */}

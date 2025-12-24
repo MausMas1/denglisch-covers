@@ -218,6 +218,25 @@ export function GameProvider({ children }) {
         }
     };
 
+    // Toggle turtle mode for a team (handicap: -8 seconds on speed bonus)
+    const toggleTurtleMode = async (teamId) => {
+        const gameStateRef = ref(db, 'gameState');
+        try {
+            const snapshot = await get(gameStateRef);
+            const currentData = snapshot.val();
+
+            if (!currentData?.teams) return;
+
+            const updatedTeams = currentData.teams.map(team =>
+                team.id === teamId ? { ...team, turtleMode: !team.turtleMode } : team
+            );
+
+            await update(gameStateRef, { teams: updatedTeams });
+        } catch (error) {
+            console.error('Failed to toggle turtle mode:', error);
+        }
+    };
+
     // Reset all scores
     const resetScores = async () => {
         const gameStateRef = ref(db, 'gameState');
@@ -314,9 +333,13 @@ export function GameProvider({ children }) {
                 if (teamAnswer) {
                     const hasCorrect = teamAnswer.titleCorrect === true || teamAnswer.artistCorrect === true;
                     if (hasCorrect) {
+                        // Apply turtle mode handicap: -8 seconds (8000ms) from submission time
+                        const adjustedTime = team.turtleMode
+                            ? (teamAnswer.submittedAt || 0) - 8000
+                            : (teamAnswer.submittedAt || 0);
                         correctAnswers.push({
                             teamName: team.name,
-                            submittedAt: teamAnswer.submittedAt || 0,
+                            submittedAt: adjustedTime,
                             titleCorrect: teamAnswer.titleCorrect === true,
                             artistCorrect: teamAnswer.artistCorrect === true
                         });
@@ -324,7 +347,7 @@ export function GameProvider({ children }) {
                 }
             });
 
-            // Sort by submission time (fastest first)
+            // Sort by submission time (fastest first) - turtle mode teams get virtual -8 sec advantage
             correctAnswers.sort((a, b) => a.submittedAt - b.submittedAt);
 
             // Assign speed bonuses (gold, silver, bronze)
@@ -499,6 +522,7 @@ export function GameProvider({ children }) {
         addTeam,
         removeTeam,
         renameTeam,
+        toggleTurtleMode,
         resetScores,
         play,
         pause,
