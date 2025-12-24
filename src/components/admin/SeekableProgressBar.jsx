@@ -8,7 +8,9 @@ function SeekableProgressBar() {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
+    const [localProgress, setLocalProgress] = useState(0); // Local state during drag
     const barRef = useRef(null);
+    const lastSeekRef = useRef(0);
 
     // Listen to audio state from Firebase (broadcasted by Display)
     useEffect(() => {
@@ -18,8 +20,10 @@ function SeekableProgressBar() {
 
         const unsubProgress = onValue(progressRef, (snapshot) => {
             const val = snapshot.val();
-            if (val !== null && !isDragging) {
+            // Only update if not dragging AND not recently seeked (1.5s cooldown)
+            if (val !== null && !isDragging && Date.now() - lastSeekRef.current > 1500) {
                 setProgress(val);
+                setLocalProgress(val);
             }
         });
 
@@ -32,7 +36,8 @@ function SeekableProgressBar() {
 
         const unsubCurrentTime = onValue(currentTimeRef, (snapshot) => {
             const val = snapshot.val();
-            if (val !== null && !isDragging) {
+            // Only update if not dragging AND not recently seeked
+            if (val !== null && !isDragging && Date.now() - lastSeekRef.current > 1500) {
                 setCurrentTime(val);
             }
         });
@@ -52,6 +57,7 @@ function SeekableProgressBar() {
     };
 
     const sendSeekCommand = useCallback((newTime) => {
+        lastSeekRef.current = Date.now();
         // Send seek command to Display via Firebase
         set(ref(db, 'seekCommand'), {
             time: newTime,
@@ -66,14 +72,19 @@ function SeekableProgressBar() {
         const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
         const newTime = percent * duration;
 
-        setProgress(percent * 100);
+        // Update local state immediately for smooth UI
+        setLocalProgress(percent * 100);
         setCurrentTime(newTime);
-        sendSeekCommand(newTime);
-    }, [duration, sendSeekCommand]);
+
+        return newTime;
+    }, [duration]);
 
     const handleMouseDown = (e) => {
         setIsDragging(true);
-        handleSeek(e.clientX);
+        const newTime = handleSeek(e.clientX);
+        if (newTime !== undefined) {
+            sendSeekCommand(newTime);
+        }
     };
 
     const handleMouseMove = useCallback((e) => {
@@ -83,13 +94,22 @@ function SeekableProgressBar() {
     }, [isDragging, handleSeek]);
 
     const handleMouseUp = useCallback(() => {
+        if (isDragging) {
+            // Send final seek command on release
+            const finalTime = (localProgress / 100) * duration;
+            sendSeekCommand(finalTime);
+            setProgress(localProgress);
+        }
         setIsDragging(false);
-    }, []);
+    }, [isDragging, localProgress, duration, sendSeekCommand]);
 
     // Touch support
     const handleTouchStart = (e) => {
         setIsDragging(true);
-        handleSeek(e.touches[0].clientX);
+        const newTime = handleSeek(e.touches[0].clientX);
+        if (newTime !== undefined) {
+            sendSeekCommand(newTime);
+        }
     };
 
     const handleTouchMove = useCallback((e) => {
@@ -99,8 +119,13 @@ function SeekableProgressBar() {
     }, [isDragging, handleSeek]);
 
     const handleTouchEnd = useCallback(() => {
+        if (isDragging) {
+            const finalTime = (localProgress / 100) * duration;
+            sendSeekCommand(finalTime);
+            setProgress(localProgress);
+        }
         setIsDragging(false);
-    }, []);
+    }, [isDragging, localProgress, duration, sendSeekCommand]);
 
     useEffect(() => {
         if (isDragging) {
@@ -117,6 +142,9 @@ function SeekableProgressBar() {
         }
     }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
+    // Display localProgress during drag, otherwise use synced progress
+    const displayProgress = isDragging ? localProgress : progress;
+
     return (
         <div className="bg-gray-800 rounded-xl p-4">
             <div className="flex justify-between text-sm text-gray-400 mb-2">
@@ -126,29 +154,30 @@ function SeekableProgressBar() {
 
             <div
                 ref={barRef}
-                className="relative h-6 bg-gray-700 rounded-full cursor-pointer group"
+                className="relative h-8 bg-gray-700 rounded-full cursor-pointer group touch-none"
                 onMouseDown={handleMouseDown}
                 onTouchStart={handleTouchStart}
             >
                 {/* Progress fill */}
                 <motion.div
                     className="absolute inset-y-0 left-0 bg-gradient-to-r from-christmas-red via-christmas-gold to-christmas-green rounded-full"
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${displayProgress}%` }}
                 />
 
                 {/* Draggable handle - always visible */}
                 <motion.div
-                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full shadow-lg border-2 border-christmas-gold cursor-grab active:cursor-grabbing"
-                    style={{ left: `calc(${progress}% - 12px)` }}
-                    animate={{ scale: isDragging ? 1.2 : 1 }}
+                    className="absolute top-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full shadow-lg border-2 border-christmas-gold cursor-grab active:cursor-grabbing"
+                    style={{ left: `calc(${displayProgress}% - 14px)` }}
+                    animate={{ scale: isDragging ? 1.3 : 1 }}
                 />
             </div>
 
             <p className="text-xs text-gray-500 mt-2 text-center">
-                Klik of sleep om naar een ander punt te gaan
+                Sleep om naar een ander punt te gaan
             </p>
         </div>
     );
 }
 
 export default SeekableProgressBar;
+
