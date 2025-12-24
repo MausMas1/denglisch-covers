@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { motion } from 'framer-motion';
 
-function QRCode({ size = 200 }) {
+function QRCode({ size = 200, minimal = false }) {
     // Get the current host for the QR code URL
     const baseUrl = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
     const playPath = `${baseUrl}/play`;
@@ -9,6 +9,20 @@ function QRCode({ size = 200 }) {
     const playUrl = typeof window !== 'undefined'
         ? `${window.location.origin}${playPath}`
         : playPath;
+
+    // Minimal version - just the QR code without wrapper
+    if (minimal) {
+        return (
+            <QRCodeSVG
+                value={playUrl}
+                size={size}
+                bgColor="#ffffff"
+                fgColor="#1a1a2e"
+                level="M"
+                includeMargin={false}
+            />
+        );
+    }
 
     return (
         <motion.div
@@ -39,3 +53,4 @@ function QRCode({ size = 200 }) {
 }
 
 export default QRCode;
+

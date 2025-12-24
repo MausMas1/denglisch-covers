@@ -63,49 +63,41 @@ function LeaderOpening() {
                     alt="Denglisch Covers"
                     animate={{ scale: [1, 1.02, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-[500px] md:w-[650px] max-w-[90vw] mb-4 rounded-2xl shadow-2xl"
+                    className="w-[450px] md:w-[550px] max-w-[85vw] rounded-2xl shadow-2xl"
                 />
 
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="text-2xl md:text-3xl text-purple-300 mb-12"
-                >
-                    Scan de QR code om mee te doen!
-                </motion.p>
-
-                {/* QR Code */}
+                {/* QR Code Section */}
                 <motion.div
-                    animate={{
-                        boxShadow: [
-                            '0 0 20px rgba(168, 85, 247, 0.4)',
-                            '0 0 40px rgba(168, 85, 247, 0.6)',
-                            '0 0 20px rgba(168, 85, 247, 0.4)'
-                        ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="inline-block p-6 bg-white rounded-3xl"
-                >
-                    <QRCode size={280} showLabel={false} />
-                </motion.div>
-
-                {/* Instructions */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                    className="mt-12 space-y-2"
+                    transition={{ delay: 0.5 }}
+                    className="mt-8 flex flex-col items-center"
                 >
-                    <p className="text-xl text-white/80">
-                        📱 Pak je telefoon
+                    <motion.div
+                        animate={{
+                            boxShadow: [
+                                '0 0 20px rgba(168, 85, 247, 0.4)',
+                                '0 0 40px rgba(168, 85, 247, 0.6)',
+                                '0 0 20px rgba(168, 85, 247, 0.4)'
+                            ]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="bg-white p-5 rounded-2xl"
+                    >
+                        <QRCode size={220} minimal />
+                    </motion.div>
+
+                    <p className="text-xl md:text-2xl text-purple-300 mt-6 font-medium">
+                        📱 Scan de QR code om mee te doen!
                     </p>
-                    <p className="text-xl text-white/80">
-                        📷 Scan de QR code
-                    </p>
-                    <p className="text-xl text-white/80">
-                        🎮 Registreer je team
-                    </p>
+
+                    <div className="flex gap-6 mt-4 text-white/70 text-sm">
+                        <span>📷 Scan</span>
+                        <span>→</span>
+                        <span>🎮 Registreer</span>
+                        <span>→</span>
+                        <span>🎵 Spelen!</span>
+                    </div>
                 </motion.div>
             </motion.div>
 
