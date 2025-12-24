@@ -16,7 +16,7 @@ function QRCode({ size = 200 }) {
             animate={{ opacity: 1, scale: 1 }}
             className="glass rounded-2xl p-6 text-center"
         >
-            <h3 className="text-white font-bold mb-4 flex items-center justify-center gap-2">
+            <h3 className="text-gray-800 font-bold mb-4 flex items-center justify-center gap-2">
                 📱 Scan om mee te doen
             </h3>
 

@@ -356,7 +356,7 @@ function Display() {
                         document.documentElement.requestFullscreen();
                     }
                 }}
-                className="fixed bottom-6 right-6 z-50 p-3 glass rounded-full border border-christmas-gold/30 text-white/70 hover:text-white transition-colors"
+                className="fixed bottom-6 left-6 z-50 p-3 glass rounded-full border border-christmas-gold/30 text-white/70 hover:text-white transition-colors"
                 title="Fullscreen"
             >
                 {document.fullscreenElement ? <Minimize size={24} /> : <Maximize size={24} />}
