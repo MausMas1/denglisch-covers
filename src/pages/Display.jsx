@@ -120,10 +120,36 @@ function Display() {
 
         if (displayedSong && currentSong.id !== displayedSong.id && wasRevealed) {
             setIsTransitioning(true);
+
+            // Preload the new cover image before transitioning
+            const newCoverUrl = currentSong.coverImage?.startsWith('/') || currentSong.coverImage?.startsWith('http')
+                ? currentSong.coverImage
+                : `/covers/${currentSong.coverImage}`;
+
+            const img = new Image();
+            img.onload = () => {
+                // Image is loaded, now safe to transition
+                setTimeout(() => {
+                    setDisplayedSong(currentSong);
+                    setIsTransitioning(false);
+                }, 100); // Small additional delay for CSS to apply
+            };
+            img.onerror = () => {
+                // Even on error, continue with transition
+                setTimeout(() => {
+                    setDisplayedSong(currentSong);
+                    setIsTransitioning(false);
+                }, 100);
+            };
+            img.src = newCoverUrl;
+
+            // Fallback timeout in case image takes too long
             setTimeout(() => {
-                setDisplayedSong(currentSong);
-                setIsTransitioning(false);
-            }, 300);
+                if (isTransitioning) {
+                    setDisplayedSong(currentSong);
+                    setIsTransitioning(false);
+                }
+            }, 1000);
         } else if (!displayedSong || currentSong.id !== displayedSong.id) {
             setDisplayedSong(currentSong);
         }
