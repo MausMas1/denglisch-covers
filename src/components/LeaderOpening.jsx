@@ -59,7 +59,7 @@ function LeaderOpening() {
             >
                 {/* Logo */}
                 <motion.img
-                    src="/denglisch-covers/logo.png"
+                    src="/denglisch-covers/logo.jpg"
                     alt="Denglisch Covers"
                     animate={{ scale: [1, 1.02, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
