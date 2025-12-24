@@ -8,6 +8,7 @@ const CONFETTI = ['🎉', '🏆', '⭐', '🥇', '🎊', '✨', '👏'];
 
 function FinalPodium() {
     const { gameState } = useGame();
+    const isRevealed = gameState.finalNamesRevealed || false;
 
     // Get sorted teams by score
     const sortedTeams = useMemo(() => {
@@ -96,10 +97,10 @@ function FinalPodium() {
                                 className="text-center mb-2"
                             >
                                 <span className="text-5xl md:text-6xl">{item.medal}</span>
-                                <p className="text-white font-bold text-lg md:text-xl mt-2 max-w-[120px] truncate">
+                                <p className={`text-white font-bold text-lg md:text-xl mt-2 max-w-[120px] truncate transition-all duration-500 ${isRevealed ? '' : 'blur-md select-none'}`}>
                                     {item.team.name}
                                 </p>
-                                <p className="text-yellow-400 font-bold text-2xl md:text-3xl">
+                                <p className={`text-yellow-400 font-bold text-2xl md:text-3xl transition-all duration-500 ${isRevealed ? '' : 'blur-md select-none'}`}>
                                     {item.team.score || 0}
                                 </p>
                             </motion.div>
@@ -145,9 +146,9 @@ function FinalPodium() {
                                 >
                                     <div className="flex items-center gap-2">
                                         <span className="text-gray-400 text-sm">#{index + 4}</span>
-                                        <span className="text-white text-sm truncate max-w-[80px]">{team.name}</span>
+                                        <span className={`text-white text-sm truncate max-w-[80px] transition-all duration-500 ${isRevealed ? '' : 'blur-md select-none'}`}>{team.name}</span>
                                     </div>
-                                    <span className="text-christmas-gold font-bold">{team.score || 0}</span>
+                                    <span className={`text-christmas-gold font-bold transition-all duration-500 ${isRevealed ? '' : 'blur-md select-none'}`}>{team.score || 0}</span>
                                 </motion.div>
                             ))}
                         </div>

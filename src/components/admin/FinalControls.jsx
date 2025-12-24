@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trophy, Play, StopCircle, Loader } from 'lucide-react';
+import { Trophy, Play, StopCircle, Loader, Sparkles } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { useFirebaseStorageFiles } from '../../hooks/useFirebaseStorageFiles';
 
@@ -8,19 +8,33 @@ function FinalControls() {
     const { files: leaderFiles, loading } = useFirebaseStorageFiles('leader');
 
     const isFinalPlaying = gameState.finalPlaying || false;
+    const isNamesRevealed = gameState.finalNamesRevealed || false;
     const selectedFinal = gameState.finalUrl || '';
 
     const handleSelectFinal = (url) => {
         updateGameState({ finalUrl: url });
     };
 
-    const handlePlayFinal = () => {
+    // Stage 1: Start podium (music + blurred names)
+    const handleStartPodium = () => {
         if (!selectedFinal) return;
-        updateGameState({ finalPlaying: true });
+        updateGameState({
+            finalPlaying: true,
+            finalNamesRevealed: false
+        });
     };
 
+    // Stage 2: Reveal names
+    const handleRevealNames = () => {
+        updateGameState({ finalNamesRevealed: true });
+    };
+
+    // Stop everything
     const handleStopFinal = () => {
-        updateGameState({ finalPlaying: false });
+        updateGameState({
+            finalPlaying: false,
+            finalNamesRevealed: false
+        });
     };
 
     return (
@@ -53,37 +67,61 @@ function FinalControls() {
                     </select>
                 </div>
 
-                {/* Play/Stop button */}
-                <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={isFinalPlaying ? handleStopFinal : handlePlayFinal}
-                    disabled={!selectedFinal && !isFinalPlaying}
-                    className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${isFinalPlaying
-                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white'
-                        : 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black disabled:opacity-50'
-                        }`}
-                >
-                    {isFinalPlaying ? (
-                        <>
-                            <StopCircle size={20} />
-                            <span>Stop Eindstand</span>
-                        </>
-                    ) : loading ? (
-                        <>
-                            <Loader size={20} className="animate-spin" />
-                            <span>Laden...</span>
-                        </>
-                    ) : (
-                        <>
-                            <Play size={20} />
-                            <span>🏆 Toon Eindstand</span>
-                        </>
-                    )}
-                </motion.button>
+                {/* Stage 1: Start Podium button */}
+                {!isFinalPlaying && (
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleStartPodium}
+                        disabled={!selectedFinal}
+                        className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-yellow-500 to-amber-600 text-black disabled:opacity-50"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader size={20} className="animate-spin" />
+                                <span>Laden...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Play size={20} />
+                                <span>🎬 Start Podium</span>
+                            </>
+                        )}
+                    </motion.button>
+                )}
 
+                {/* Stage 2: Reveal Names button (only when podium is active but names hidden) */}
+                {isFinalPlaying && !isNamesRevealed && (
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleRevealNames}
+                        className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-purple-500 to-pink-500 text-white animate-pulse"
+                    >
+                        <Sparkles size={20} />
+                        <span>✨ Onthul Winnaars!</span>
+                    </motion.button>
+                )}
+
+                {/* Stop button (when podium is active) */}
                 {isFinalPlaying && (
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleStopFinal}
+                        className="w-full py-2 rounded-xl font-bold flex items-center justify-center gap-2 transition-all bg-gradient-to-r from-red-600 to-red-700 text-white"
+                    >
+                        <StopCircle size={18} />
+                        <span>Stop Eindstand</span>
+                    </motion.button>
+                )}
+
+                {/* Status indicators */}
+                {isFinalPlaying && !isNamesRevealed && (
                     <p className="text-yellow-300 text-xs text-center animate-pulse">
-                        🏆 Podium wordt getoond op het TV-scherm...
+                        🎬 Podium actief - wacht op reveal...
+                    </p>
+                )}
+                {isFinalPlaying && isNamesRevealed && (
+                    <p className="text-green-300 text-xs text-center">
+                        ✨ Winnaars onthuld!
                     </p>
                 )}
             </div>
@@ -92,3 +130,4 @@ function FinalControls() {
 }
 
 export default FinalControls;
+

@@ -175,6 +175,7 @@ function Play() {
 
     // Final standings reveal screen
     if (gameState.finalPlaying && teamRegistered) {
+        const isRevealed = gameState.finalNamesRevealed || false;
         const position = getTeamPosition();
         const myTeam = existingTeams.find(t => t.name === teamName);
         const totalTeams = existingTeams.length;
@@ -186,65 +187,87 @@ function Play() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="glass rounded-3xl p-8 max-w-md w-full text-center"
                 >
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', bounce: 0.5, delay: 0.2 }}
-                        className="text-8xl mb-4"
-                    >
-                        {getPositionEmoji(position)}
-                    </motion.div>
+                    {!isRevealed ? (
+                        // Waiting for reveal
+                        <>
+                            <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="text-8xl mb-4"
+                            >
+                                🏆
+                            </motion.div>
+                            <h1 className="text-2xl font-bold text-white mb-2">
+                                Eindstand...
+                            </h1>
+                            <p className="text-snow/70 text-lg animate-pulse">
+                                Even geduld, de uitslag komt zo!
+                            </p>
+                        </>
+                    ) : (
+                        // Revealed
+                        <>
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ type: 'spring', bounce: 0.5 }}
+                                className="text-8xl mb-4"
+                            >
+                                {getPositionEmoji(position)}
+                            </motion.div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="text-2xl font-bold text-white mb-2"
-                    >
-                        {position <= 3 ? 'Gefeliciteerd!' : 'Goed gespeeld!'}
-                    </motion.h1>
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="text-2xl font-bold text-white mb-2"
+                            >
+                                {position <= 3 ? 'Gefeliciteerd!' : 'Goed gespeeld!'}
+                            </motion.h1>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 }}
-                        className="mb-6"
-                    >
-                        <p className="text-snow/80 text-lg mb-4">
-                            {teamName}, je bent
-                        </p>
-                        <div className={`text-5xl font-bold mb-2 ${position === 1 ? 'text-yellow-400' :
-                                position === 2 ? 'text-gray-300' :
-                                    position === 3 ? 'text-amber-500' :
-                                        'text-christmas-gold'
-                            }`}>
-                            #{position}
-                        </div>
-                        <p className="text-snow/80 text-lg">
-                            van {totalTeams} team{totalTeams !== 1 ? 's' : ''} geworden!
-                        </p>
-                    </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="mb-6"
+                            >
+                                <p className="text-snow/80 text-lg mb-4">
+                                    {teamName}, je bent
+                                </p>
+                                <div className={`text-5xl font-bold mb-2 ${position === 1 ? 'text-yellow-400' :
+                                    position === 2 ? 'text-gray-300' :
+                                        position === 3 ? 'text-amber-500' :
+                                            'text-christmas-gold'
+                                    }`}>
+                                    #{position}
+                                </div>
+                                <p className="text-snow/80 text-lg">
+                                    van {totalTeams} team{totalTeams !== 1 ? 's' : ''} geworden!
+                                </p>
+                            </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                        className="bg-christmas-gold/20 rounded-xl p-4"
-                    >
-                        <p className="text-snow/60 text-sm mb-1">Jouw eindscore</p>
-                        <p className="text-3xl font-bold text-christmas-gold">
-                            {myTeam?.score || 0} punten
-                        </p>
-                    </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.6 }}
+                                className="bg-christmas-gold/20 rounded-xl p-4"
+                            >
+                                <p className="text-snow/60 text-sm mb-1">Jouw eindscore</p>
+                                <p className="text-3xl font-bold text-christmas-gold">
+                                    {myTeam?.score || 0} punten
+                                </p>
+                            </motion.div>
 
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1 }}
-                        className="text-snow/50 text-sm mt-6"
-                    >
-                        🎄 Bedankt voor het meespelen! 🎄
-                    </motion.p>
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.8 }}
+                                className="text-snow/50 text-sm mt-6"
+                            >
+                                🎄 Bedankt voor het meespelen! 🎄
+                            </motion.p>
+                        </>
+                    )}
                 </motion.div>
             </div>
         );
