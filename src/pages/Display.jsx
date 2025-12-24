@@ -494,24 +494,30 @@ function Display() {
                     animate={{ opacity: isTransitioning ? 0 : 1 }}
                     transition={{ duration: 0.3 }}
                 >
-                    {/* Cover Image */}
-                    <motion.div
-                        layout
-                        className={`w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 transition-all duration-500 ${gameState.isRevealed ? 'border-christmas-gold neon-glow' : 'border-christmas-gold/30'
-                            }`}
-                        style={{
-                            filter: shouldBlur ? 'blur(50px) brightness(0.4) saturate(0.5)' : 'blur(0) brightness(1) saturate(1)',
-                            transform: shouldBlur ? 'scale(1.1)' : 'scale(1)',
-                            color: '#f59e0b',
-                        }}
-                    >
+                    {/* Cover Image - Dual layer approach for slow browsers */}
+                    <div className={`relative w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 ${gameState.isRevealed && !isTransitioning ? 'border-christmas-gold neon-glow' : 'border-christmas-gold/30'}`}>
+                        {/* Base layer - ALWAYS blurred (prevents flash) */}
                         <img
                             src={getCoverUrl()}
                             alt="Album Cover"
-                            className="w-full h-full object-cover"
+                            className="absolute inset-0 w-full h-full object-cover"
+                            style={{
+                                filter: 'blur(50px) brightness(0.4) saturate(0.5)',
+                                transform: 'scale(1.2)',
+                            }}
                             onError={(e) => { e.target.src = 'https://placehold.co/600x600/1a1a2e/f59e0b?text=🎵'; }}
                         />
-                    </motion.div>
+                        {/* Sharp layer - fades in on reveal via opacity */}
+                        <img
+                            src={getCoverUrl()}
+                            alt="Album Cover"
+                            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                            style={{
+                                opacity: shouldBlur ? 0 : 1,
+                            }}
+                            onError={(e) => { e.target.src = 'https://placehold.co/600x600/1a1a2e/f59e0b?text=🎵'; }}
+                        />
+                    </div>
 
                     {/* Playing indicator - fixed at bottom to not overlap lyrics */}
                     <AnimatePresence>
