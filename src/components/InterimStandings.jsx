@@ -45,7 +45,7 @@ function InterimStandings() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md"
         >
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -85,9 +85,9 @@ function InterimStandings() {
                                 </span>
                             </div>
                             <span className={`text-2xl font-bold ${index === 0 ? 'text-yellow-400' :
-                                    index === 1 ? 'text-gray-300' :
-                                        index === 2 ? 'text-amber-500' :
-                                            'text-white'
+                                index === 1 ? 'text-gray-300' :
+                                    index === 2 ? 'text-amber-500' :
+                                        'text-white'
                                 }`}>
                                 {team.score || 0}
                             </span>
