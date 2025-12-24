@@ -57,14 +57,14 @@ function LeaderOpening() {
                 transition={{ delay: 0.3, type: 'spring' }}
                 className="text-center z-10"
             >
-                {/* Title */}
-                <motion.h1
+                {/* Logo */}
+                <motion.img
+                    src="/denglisch-covers/logo.jpg"
+                    alt="Denglisch Covers"
                     animate={{ scale: [1, 1.02, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="text-5xl md:text-7xl font-bold text-white mb-4"
-                >
-                    🎄 Denglisch Covers 🎄
-                </motion.h1>
+                    className="w-[500px] md:w-[650px] max-w-[90vw] mb-4 rounded-2xl shadow-2xl"
+                />
 
                 <motion.p
                     initial={{ opacity: 0 }}
