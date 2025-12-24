@@ -24,6 +24,11 @@ const initialGameState = {
     speedBonusGold: 3,
     speedBonusSilver: 2,
     speedBonusBronze: 1,
+    // Score visibility on Display (toggle)
+    showScoresOnDisplay: true,
+    // Interim standings overlay
+    interimPlaying: false,
+    interimMusicUrl: null,
 };
 
 // Get songs from localStorage (metadata only) or use defaults

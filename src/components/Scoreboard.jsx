@@ -173,7 +173,7 @@ function Scoreboard({ currentSongId }) {
                                     animate={{ scale: 1, color: '#ffffff' }}
                                     className="text-white font-bold text-lg tabular-nums"
                                 >
-                                    {team.score}
+                                    {gameState.showScoresOnDisplay !== false ? team.score : '•'}
                                 </motion.span>
                             </motion.div>
                         ))}

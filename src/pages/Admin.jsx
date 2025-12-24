@@ -20,6 +20,7 @@ import AccessCodeSettings from '../components/admin/AccessCodeSettings';
 import QRCodeToggle from '../components/admin/QRCodeToggle';
 import SpeedBonusSettings from '../components/admin/SpeedBonusSettings';
 import LeaderControls from '../components/admin/LeaderControls';
+import InterimControls from '../components/admin/InterimControls';
 import FinalControls from '../components/admin/FinalControls';
 import AnswerHistory from '../components/admin/AnswerHistory';
 
@@ -143,6 +144,11 @@ function Admin() {
                 {/* Leader Song / Opening - after soundboard */}
                 <section>
                     <LeaderControls />
+                </section>
+
+                {/* Interim Standings & Score Visibility */}
+                <section>
+                    <InterimControls />
                 </section>
 
                 {/* Final Standings Reveal */}

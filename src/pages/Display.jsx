@@ -17,6 +17,7 @@ import StatisticsOverlay from '../components/StatisticsOverlay';
 import DisplayQRCode from '../components/DisplayQRCode';
 import LeaderOpening from '../components/LeaderOpening';
 import FinalPodium from '../components/FinalPodium';
+import InterimStandings from '../components/InterimStandings';
 
 function Display() {
     const { gameState, currentSong, audioRef, getActiveAudioUrl } = useGame();
@@ -332,6 +333,11 @@ function Display() {
             {/* Final Podium Reveal */}
             <AnimatePresence>
                 {gameState.finalPlaying && <FinalPodium />}
+            </AnimatePresence>
+
+            {/* Interim Standings Overlay */}
+            <AnimatePresence>
+                {gameState.interimPlaying && <InterimStandings />}
             </AnimatePresence>
 
             {!gameState.isRevealed && <TypingIndicators songId={currentSong?.id} />}
