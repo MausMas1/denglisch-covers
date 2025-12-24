@@ -33,9 +33,9 @@ function FinalPodium() {
 
     // Podium order: 2nd, 1st, 3rd (for visual display)
     const podiumOrder = [
-        { place: 2, team: top3[1], height: 'h-32', color: 'from-gray-400 to-gray-500', medal: '🥈', delay: 0.3 },
-        { place: 1, team: top3[0], height: 'h-44', color: 'from-yellow-400 to-yellow-600', medal: '🥇', delay: 0 },
-        { place: 3, team: top3[2], height: 'h-24', color: 'from-amber-600 to-amber-700', medal: '🥉', delay: 0.5 },
+        { place: 2, team: top3[1], height: 128, color: 'from-gray-400 to-gray-500', medal: '🥈', delay: 0.3 },
+        { place: 1, team: top3[0], height: 176, color: 'from-yellow-400 to-yellow-600', medal: '🥇', delay: 0 },
+        { place: 3, team: top3[2], height: 96, color: 'from-amber-600 to-amber-700', medal: '🥉', delay: 0.5 },
     ];
 
     return (
@@ -108,9 +108,9 @@ function FinalPodium() {
                             {/* Podium block */}
                             <motion.div
                                 initial={{ height: 0 }}
-                                animate={{ height: 'auto' }}
+                                animate={{ height: item.height }}
                                 transition={{ delay: 0.8 + item.delay, duration: 0.5 }}
-                                className={`${item.height} w-24 md:w-32 bg-gradient-to-b ${item.color} rounded-t-lg flex items-end justify-center pb-2`}
+                                className={`w-24 md:w-32 bg-gradient-to-b ${item.color} rounded-t-lg flex items-end justify-center pb-2`}
                             >
                                 <span className="text-white font-bold text-3xl">{item.place}</span>
                             </motion.div>
