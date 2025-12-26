@@ -13,10 +13,8 @@ function Scoreboard({ currentSongId }) {
     const prevPositionsRef = useRef({});
     const prevScoresRef = useRef({});
 
-    // Sort teams by score only when revealed, otherwise keep original registration order
-    const sortedTeams = gameState.isRevealed
-        ? [...teams].sort((a, b) => b.score - a.score)
-        : [...teams].sort((a, b) => a.id - b.id);
+    // Keep teams in registration order always - standings only shown in FinalPodium
+    const sortedTeams = [...teams].sort((a, b) => a.id - b.id);
 
     // Get current positions map
     const getCurrentPositions = () => {
@@ -151,10 +149,6 @@ function Scoreboard({ currentSongId }) {
                                     <span className="text-christmas-gold font-bold text-xs w-4">
                                         {index + 1}.
                                     </span>
-                                    {/* Crown for leader - only when revealed */}
-                                    {gameState.isRevealed && index === 0 && sortedTeams.length > 1 && team.score > 0 && (
-                                        <span className="text-christmas-gold">👑</span>
-                                    )}
                                     <span className="text-snow/90 text-sm">{team.name}</span>
                                     {/* Turtle mode indicator */}
                                     {team.turtleMode && (

@@ -148,39 +148,50 @@ function ScoreManager() {
                             </motion.button>
                         </div>
                     ) : (
-                        // Display mode
-                        <div className="flex items-center gap-3">
-                            {/* Team name and rank */}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
+                        // Display mode - stacked layout for mobile
+                        <div className="space-y-2">
+                            {/* Team name row */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
                                     {index === 0 && team.score > 0 && (
-                                        <span className="text-sm">👑</span>
+                                        <span className="text-sm flex-shrink-0">👑</span>
                                     )}
                                     <span className="text-white font-medium truncate">{team.name}</span>
                                     {team.turtleMode && (
-                                        <span className="text-sm" title="Schildpad modus actief">🐢</span>
+                                        <span className="text-sm flex-shrink-0">🐢</span>
                                     )}
+                                </div>
+                                {/* Action buttons - compact */}
+                                <div className="flex items-center gap-1 flex-shrink-0">
                                     <motion.button
                                         whileTap={{ scale: 0.9 }}
                                         onClick={() => handleStartEdit(team)}
-                                        className="p-1 text-gray-500 hover:text-white"
+                                        className="p-1.5 text-gray-500 hover:text-white"
                                         title="Naam bewerken"
                                     >
-                                        <Edit2 size={12} />
+                                        <Edit2 size={14} />
                                     </motion.button>
                                     <motion.button
                                         whileTap={{ scale: 0.9 }}
                                         onClick={() => toggleTurtleMode(team.id)}
-                                        className={`p-1 rounded transition-colors ${team.turtleMode ? 'text-green-400 bg-green-400/20' : 'text-gray-500 hover:text-green-400'}`}
-                                        title={team.turtleMode ? "Schildpad modus uit" : "Schildpad modus aan (-8 sec)"}
+                                        className={`p-1 text-sm rounded ${team.turtleMode ? 'text-green-400 bg-green-400/20' : 'text-gray-500 hover:text-green-400'}`}
+                                        title={team.turtleMode ? "Schildpad uit" : "Schildpad aan"}
                                     >
                                         🐢
+                                    </motion.button>
+                                    <motion.button
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={() => handleRemoveTeam(team.id, team.name)}
+                                        className="p-1.5 text-gray-500 hover:text-red-400"
+                                        title="Verwijderen"
+                                    >
+                                        <Trash2 size={14} />
                                     </motion.button>
                                 </div>
                             </div>
 
-                            {/* Score controls */}
-                            <div className="flex items-center gap-2">
+                            {/* Score controls row */}
+                            <div className="flex items-center justify-center gap-3">
                                 <motion.button
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => updateScore(team.id, -1)}
@@ -193,7 +204,7 @@ function ScoreManager() {
                                     key={team.score}
                                     initial={{ scale: 1.3 }}
                                     animate={{ scale: 1 }}
-                                    className="w-12 text-center text-2xl font-bold text-christmas-gold"
+                                    className="w-14 text-center text-2xl font-bold text-christmas-gold"
                                 >
                                     {team.score}
                                 </motion.span>
@@ -206,16 +217,6 @@ function ScoreManager() {
                                     <Plus size={20} />
                                 </motion.button>
                             </div>
-
-                            {/* Delete button */}
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => handleRemoveTeam(team.id, team.name)}
-                                className="p-2 text-gray-500 hover:text-red-400"
-                                title="Team verwijderen"
-                            >
-                                <Trash2 size={16} />
-                            </motion.button>
                         </div>
                     )}
                 </motion.div>
