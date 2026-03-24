@@ -208,6 +208,34 @@ body {
   animation: gradient-shift 15s ease infinite;
 }
 
+.display-spring-gradient {
+  background:
+    radial-gradient(circle at top, rgba(254, 240, 138, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 24%, rgba(251, 207, 232, 0.18), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgba(187, 247, 208, 0.18), transparent 26%),
+    linear-gradient(135deg, #10261f 0%, #1f4d3c 38%, #34765b 68%, #6cab8c 100%);
+  background-size: 140% 140%;
+  animation: gradient-shift 18s ease infinite;
+}
+
+.glass-spring {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 60px rgba(10, 26, 20, 0.2);
+}
+
+.text-gradient-spring {
+  background: linear-gradient(135deg, #fff7cc 0%, #ffd1dc 45%, #d1fae5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.spring-glow {
+  box-shadow: 0 0 24px rgba(253, 230, 138, 0.22), 0 0 56px rgba(251, 207, 232, 0.16);
+}
+
 /* Score pulse effect */
 @keyframes score-pulse {
   0% {

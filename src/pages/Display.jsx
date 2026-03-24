@@ -4,8 +4,7 @@ import { Volume2, Music, Trophy, Maximize, Minimize } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { db } from '../firebase';
 import { ref, set, onValue } from 'firebase/database';
-import Snowfall from '../components/Snowfall';
-import ChristmasLights from '../components/ChristmasLights';
+import SpringPetals from '../components/SpringPetals';
 import ProgressBar from '../components/ProgressBar';
 import Confetti from '../components/Confetti';
 import Scoreboard from '../components/Scoreboard';
@@ -319,9 +318,13 @@ function Display() {
     const shouldBlur = !gameState.isRevealed || isTransitioning;
 
     return (
-        <div className="min-h-screen animated-gradient relative overflow-hidden">
-            <Snowfall />
-            <ChristmasLights />
+        <div className="min-h-screen display-spring-gradient relative overflow-hidden">
+            <SpringPetals />
+            <div className="pointer-events-none absolute inset-0 z-0">
+                <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-amber-100/14 blur-3xl" />
+                <div className="absolute top-[18%] right-[10%] h-80 w-80 rounded-full bg-emerald-200/14 blur-3xl" />
+                <div className="absolute bottom-[-8%] left-[20%] h-96 w-96 rounded-full bg-rose-200/12 blur-3xl" />
+            </div>
             <Confetti isActive={showConfetti} />
             <FlyingEmojis />
 
@@ -356,7 +359,7 @@ function Display() {
                         document.documentElement.requestFullscreen();
                     }
                 }}
-                className="fixed bottom-6 left-6 z-50 p-3 glass rounded-full border border-christmas-gold/30 text-white/70 hover:text-white transition-colors"
+                className="fixed bottom-6 left-6 z-50 p-3 glass-spring rounded-full border border-white/15 text-white/70 hover:text-white transition-colors"
                 title="Fullscreen"
             >
                 {document.fullscreenElement ? <Minimize size={24} /> : <Maximize size={24} />}
@@ -392,9 +395,9 @@ function Display() {
                         exit={{ opacity: 0, y: -50 }}
                         className="fixed top-6 right-6 z-50"
                     >
-                        <div className="glass rounded-2xl p-6 border-2 border-christmas-gold shadow-2xl">
+                        <div className="glass-spring rounded-2xl p-6 border-2 border-emerald-100/25 shadow-2xl">
                             <div className="flex items-center gap-3 mb-4">
-                                <Trophy className="text-christmas-gold" size={32} />
+                                <Trophy className="text-amber-100" size={32} />
                                 <span className="text-2xl font-bold text-white">Punten Toegekend!</span>
                             </div>
                             <div className="space-y-2">
@@ -410,13 +413,13 @@ function Display() {
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: index * 0.1 }}
-                                            className="flex items-center justify-between gap-4 bg-christmas-green/20 rounded-xl px-4 py-2"
+                                            className="flex items-center justify-between gap-4 rounded-xl bg-emerald-100/10 px-4 py-2"
                                         >
                                             <div className="flex items-center gap-2">
                                                 {medalEmoji && <span className="text-2xl">{medalEmoji}</span>}
                                                 <span className="text-white font-medium">{teamName}</span>
                                             </div>
-                                            <span className="text-christmas-gold font-bold text-xl">+{points}</span>
+                                            <span className="text-amber-100 font-bold text-xl">+{points}</span>
                                         </motion.div>
                                     );
                                 })}
@@ -443,27 +446,26 @@ function Display() {
                                 animate={{
                                     scale: remoteAudioRequest ? [1, 1.3, 1] : [1, 1.1, 1],
                                     boxShadow: remoteAudioRequest
-                                        ? ['0 0 20px #f59e0b', '0 0 60px #f59e0b', '0 0 20px #f59e0b']
+                                        ? ['0 0 20px #fde68a', '0 0 60px #fde68a', '0 0 20px #fde68a']
                                         : undefined
                                 }}
                                 transition={{ duration: remoteAudioRequest ? 0.5 : 2, repeat: Infinity }}
-                                className={`w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-christmas-gold to-christmas-gold-light rounded-full flex items-center justify-center shadow-lg neon-glow ${remoteAudioRequest ? 'ring-4 ring-christmas-gold' : ''}`}
-                                style={{ color: '#f59e0b' }}
+                                className={`w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-amber-100 via-rose-100 to-emerald-100 flex items-center justify-center shadow-lg spring-glow ${remoteAudioRequest ? 'ring-4 ring-amber-100/70' : ''}`}
                             >
-                                <Volume2 size={64} className="text-christmas-red-dark" />
+                                <Volume2 size={64} className="text-emerald-950" />
                             </motion.div>
-                            <h2 className="text-4xl font-bold text-white mb-4 neon-glow-gold">🎵 Denglisch Covers 🎵</h2>
+                            <h2 className="text-4xl font-bold text-white mb-4 text-gradient-spring">Denglisch Covers</h2>
                             {remoteAudioRequest ? (
                                 <motion.p
                                     initial={{ scale: 0.9 }}
                                     animate={{ scale: [1, 1.05, 1] }}
                                     transition={{ duration: 0.5, repeat: Infinity }}
-                                    className="text-2xl text-christmas-gold font-bold"
+                                    className="text-2xl text-amber-100 font-bold"
                                 >
-                                    ⚡ KLIK NU OM TE STARTEN! ⚡
+                                    Klik om de lente-edit te starten
                                 </motion.p>
                             ) : (
-                                <p className="text-xl text-snow/70">Klik om te starten</p>
+                                <p className="text-xl text-white/72">Klik om te starten</p>
                             )}
                         </motion.div>
                     </motion.div>
@@ -481,10 +483,10 @@ function Display() {
                             exit={{ opacity: 0, y: -20 }}
                             className="mb-8"
                         >
-                            <div className="glass px-6 py-3 rounded-full border border-christmas-gold/30">
+                            <div className="glass-spring px-6 py-3 rounded-full border border-white/15">
                                 <div className="flex items-center gap-3">
-                                    <Music className="text-christmas-gold" size={24} />
-                                    <span className="text-xl font-bold text-gradient">
+                                    <Music className="text-amber-100" size={24} />
+                                    <span className="text-xl font-bold text-gradient-spring">
                                         {(displayedSong || currentSong)?.genre}
                                     </span>
                                 </div>
@@ -501,7 +503,7 @@ function Display() {
                     transition={{ duration: 0.3 }}
                 >
                     {/* Cover Image - Dual layer approach for slow browsers */}
-                    <div className={`relative w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 ${gameState.isRevealed && !isTransitioning ? 'border-christmas-gold neon-glow' : 'border-christmas-gold/30'}`}>
+                    <div className={`relative w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 ${gameState.isRevealed && !isTransitioning ? 'border-amber-100 spring-glow' : 'border-white/15'}`}>
                         {/* Base layer - ALWAYS blurred (prevents flash) */}
                         <img
                             src={getCoverUrl()}
@@ -530,12 +532,12 @@ function Display() {
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mt-4 glass px-4 py-2 rounded-full border border-christmas-gold/30"
+                            className="mt-4 glass-spring px-4 py-2 rounded-full border border-white/15"
                         >
-                            <span className="text-snow/70 text-sm">
-                                💰 <span className="text-christmas-gold font-medium">{(gameState.pointsPerAnswer || 1) * 2}</span> punten te verdienen
+                            <span className="text-white/75 text-sm">
+                                🌼 <span className="text-amber-100 font-medium">{(gameState.pointsPerAnswer || 1) * 2}</span> punten te verdienen
                                 {gameState.speedBonusEnabled && (
-                                    <span className="text-snow/50 ml-2">
+                                    <span className="text-white/55 ml-2">
                                         + 🥇{gameState.speedBonusGold || 3} 🥈{gameState.speedBonusSilver || 2} 🥉{gameState.speedBonusBronze || 1}
                                     </span>
                                 )}
@@ -552,9 +554,9 @@ function Display() {
                                 exit={{ opacity: 0 }}
                                 className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10"
                             >
-                                <div className="glass px-4 py-2 rounded-full flex items-center gap-2 border border-blue-500/30">
-                                    <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" />
-                                    <span className="text-snow text-sm font-medium">🇬🇧 Speelt af...</span>
+                                <div className="glass-spring px-4 py-2 rounded-full flex items-center gap-2 border border-emerald-200/20">
+                                    <div className="w-3 h-3 bg-emerald-200 rounded-full animate-pulse" />
+                                    <span className="text-snow text-sm font-medium">🎧 Speelt af...</span>
                                 </div>
                             </motion.div>
                         )}
@@ -574,7 +576,7 @@ function Display() {
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 0.3, duration: 0.5 }}
-                                    className="text-4xl md:text-6xl font-bold text-gradient mb-3"
+                                    className="text-4xl md:text-6xl font-bold text-gradient-spring mb-3"
                                 >
                                     {(displayedSong || currentSong)?.titleOriginal}
                                 </motion.h1>
@@ -593,8 +595,8 @@ function Display() {
                                     className="mt-4 flex items-center justify-center gap-3"
                                 >
                                     <span className="text-3xl">🇳🇱</span>
-                                    <span className="text-xl text-christmas-gold font-medium neon-glow-gold">Zing mee!</span>
-                                    <span className="text-3xl">🎤</span>
+                                    <span className="text-xl text-amber-100 font-medium">Zing mee!</span>
+                                    <span className="text-3xl">🌷</span>
                                 </motion.div>
                             </motion.div>
                         )}
