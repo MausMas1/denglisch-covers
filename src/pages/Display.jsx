@@ -4,7 +4,6 @@ import { Volume2, Music, Trophy, Maximize, Minimize } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { db } from '../firebase';
 import { ref, set, onValue } from 'firebase/database';
-import SpringPetals from '../components/SpringPetals';
 import ProgressBar from '../components/ProgressBar';
 import Confetti from '../components/Confetti';
 import Scoreboard from '../components/Scoreboard';
@@ -319,7 +318,6 @@ function Display() {
 
     return (
         <div className="min-h-screen display-spring-gradient relative overflow-hidden">
-            <SpringPetals />
             <div className="pointer-events-none absolute inset-0 z-0">
                 <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-amber-100/14 blur-3xl" />
                 <div className="absolute top-[18%] right-[10%] h-80 w-80 rounded-full bg-emerald-200/14 blur-3xl" />
